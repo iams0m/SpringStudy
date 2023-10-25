@@ -11,57 +11,15 @@
 * `Build` : Gradle
 
 ##### `Section 1) 프로젝트 환경설정`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
 
 ##### `Section 2) 스프링 웹 개발 기초`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
 
 ##### `Section 3) 회원 관리 예제 - 백엔드 개발`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
 
 ##### `Section 4) 스프링 빈과 의존관계`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
 
 ##### `Section 5) 회원 관리 예제 - 웹 MVC 개발`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
 
 ##### `Section 6) 스프링 DB 접근 기술`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
 
 ##### `Section 7) AOP`
-<details>
-  
-  <summary>⚽️ 트러블 슈팅</summary>
-
-</details>
-<br>
