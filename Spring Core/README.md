@@ -77,6 +77,44 @@
 
        💡 참고로 BeanFactory를 직접 사용할 일은 거의 없다. 부가 기능이 포함된 ApplicationContext 사용 !
 
-  ##### `Section 5) 싱글톤 컨테이너`
+##### `Section 5) 싱글톤 컨테이너`
+  * `싱글톤 패턴`
+      
+      * 고객의 요청이 들어올 때마다 객체를 생성하는 것이 아닌, 이미 만들어진 객체를 공유하여 사용하는 패턴
+        ```java
+        public class Singleton {
+
+            // 1. static 영역에 객체를 딱 1개만 생성
+            private static Singleton instance = new Singleton();
+
+            // 2. public으로 열어서 객체 인스턴스가 필요하면 이 static 메서드를 통해서만 조회하도록 허용
+            public static Singleton getInstance() {
+                return instance;
+            }
+
+            // 3. 생성자를 private으로 선언하여 외부에서 new 키워드를 사용한 객체 생성을 못하게 막음
+            private Singleton() {
+            }
+        
+            public void logic() {
+                System.out.println("싱글톤 객체 로직 호출");
+            }
+        }
+        ```
+       
+  * `싱글톤 컨테이너`
+
+      * 유연성이 떨어지는 각종 싱글톤 패턴의 문제점을 해결하면서, 싱글톤 패턴을 적용하지 않아도 객체 인스턴스를 싱글톤으로 관리
+      * 스프링 빈 : 컨테이너의 도움을 받아 싱글톤 스콥으로 관리되는 빈
+      
+  * `싱글톤 방식의 주의점`
+      * 무상태(stateless)로 설계하자.
+        * 특정 클라이언트에 의존적이거나 값을 변경할 수 있는 필드가 있으면 안된다. ➡️ 가급적 읽기만 가능해야 한다!
+        * **필드에 공유되지 않는** 지역변수, 파라미터, ThreadLocal 등을 사용하자 ➡️ ❗스프링 빈의 필드에 공유값을 설정하면, 정말 큰 장애가 발생할 수 있다❗
+          
+  * `@Configuration`
+      * @Bean만 사용해도 스프링 빈으로 등록은 되지만, 싱글톤이 유지되지 않는다. ➡️ 이때 @Configuration을 사용하면 @Bean을 등록할 때 **싱글톤이 되도록 보장**해준다.
+      * @Bean이 붙은 메서드마다 이미 스프링 빈이 존재하면 존재하는 빈 반환
+      * 스프링 빈이 없으면, 생성해서 스프링 빈으로 등록하고 반환하는 코드가 동적으로 만들어짐
 
   </details>
