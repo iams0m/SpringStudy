@@ -180,4 +180,6 @@
 
     * `인터페이스 (InitializingBean, DisposableBean)`
 
+##### `Section 9) 빈 스코프`
+
   </details>
