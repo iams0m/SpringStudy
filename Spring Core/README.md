@@ -185,17 +185,46 @@
 
     * `인터페이스 (InitializingBean, DisposableBean)`
 
-##### `Section 9) 빈 스코프`
-  * 스프링이 지원하는 다양한 스코프 : 싱글톤, 프로토타입, 웹 관련 스코프 (request, session, application)
-    * `프로토타입 빈`
+##### `Section 9) 빈 스코프`  
+  * `빈 스코프`
+    * 번역 그대로 '빈이 존재할 수 있는 범위'
+    * 스프링이 지원하는 빈 스코프 종류 : 싱글톤, 프로토타입, 웹 관련 스코프 (request, session, application)
+      * `싱글톤 빈`
+        * 스프링 빈이 기본적으로 생성하는 스코프
+        * 스프링 컨테이너의 시작 ~ 종료까지 유지되는 가장 넓은 범위의 스코프
+        * 스프링 컨테이너에 요청할 때마다 항상 같은 객체 인스턴스의 스프링 빈 반환
+
+      * `프로토타입 빈`  
+        * 스프링 컨테이너에 요청할 때마다 새로운 프로토타입 빈을 생성하여 반환
+        * 스프링 컨테이너는 프로토타입 빈의 생성과 의존 관계 주입, 그리고 초기화까지만 관여 (➡️ @PreDestroy 같은 종료 메서드 호출 X)
+        * 싱글톤 빈과 함께 사용시 문제점 : `싱글톤 빈이 프로토타입 빈을 주입받는 경우`
+          * 싱글톤의 프로토타입 빈이 매번 바뀌지 않고 같은 빈 사용 (싱글톤 빈이 ApplicationContext가 처음 동작할 때 빈을 만들고, 주입해서 종료될 때까지 계속 사용하기 때문에 싱글톤 빈 안에 있는 프로토타입도 처음 주입된 채 그대로 사용하게 됨) ➡️ **객체 조회가 꼭 필요한 시점까지 스프링 빈 요청을 지연 시키자 !**
+            * 해결 방법 1 : `Provider`
+              * ObjectProvider , JSR330 Provider 등을 사용하여 내부에서 스프링 컨테이너를 통해 해당 빈을 찾아서 반환(**DL**, **D**ependency **L**ookup)
+              ```java
+              @Component
+              public class Single {
+
+              @Autowired
+              ObjectProvider<ProtoType> protoType;
+
+              public ProtoType getProtoType() {
+              return protoType.getIfAvailable();
+                  }
+              }
+              ```
+
+            * 해결 방법 2 : `Proxy`
+              ```java
+              @Component
+              @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
+              public class ProtoType {
+              }
+              ```
+       
+      * `웹 스코프`
+        * 웹 환경에서만 동작한다.
+        * 스프링이 해당 스코프의 종료 시점까지 관리한다. (➡️ 종료 메서드가 호출된다.)
       
-      * 스프링 컨테이너에 요청할 때마다 새로 생성된다.
-      * 스프링 컨테이너는 프로토타입 빈의 생성과 의존 관계 주입, 그리고 초기화까지만 관여한다. (➡️ 종료 메서드는 호출되지 않는다.)
-      * 프로토타입 빈은 프로토타입 빈을 조회한 클라이언트가 관리해야 한다. (➡️ 종료 메서드 호출도 클라이언트가 직접 해야한다.)
-     
-    * `웹 스코프`
-   
-      * 웹 환경에서만 동작한다.
-      * 스프링이 해당 스코프의 종료 시점까지 관리한다. (➡️ 종료 메서드가 호출된다.)
  
   </details>
