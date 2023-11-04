@@ -250,5 +250,8 @@
   * `UDP` : IP에 PORT 번호와 체크섬 추가, 필요하면 애플리케이션에서 UDP 프로토콜 위에 기능 확장 가능
     * `PORT` : 같은 IP 안에서 동작하는 애플리케이션을 구분하기 위해서 사용
   * `DNS (Domain Name Service)`: 변하기 쉽고 외우기 어려운 IP 주소를 DNS 서버를 통해 도메인 명(예 : google.com)을 등록하여 사용할 수 있도록 도와줌
+  
+##### `Section 2) URI와 웹 브라우저 요청 흐름`
+  
   </details>
   
