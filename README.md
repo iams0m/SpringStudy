@@ -252,6 +252,12 @@
   * `DNS (Domain Name Service)`: 변하기 쉽고 외우기 어려운 IP 주소를 DNS 서버를 통해 도메인 명(예 : google.com)을 등록하여 사용할 수 있도록 도와줌
   
 ##### `Section 2) URI와 웹 브라우저 요청 흐름`
+  * `URI (Uniform Resource Identifier)` : 인터넷 자원을 나타내는 고유 식별자
+    * `URL (Uniformed Resource Locator)` : URI 에 포함되는 개념으로, 해당 자원의 위치 지정
+    * `URN (Uniformed Resource Name)` : URI 에 포함되는 개념으로, 해당 자원에 이름 부여
+  
+  * `웹 브라우저 요청 흐름`
+    * 웹 브라우저가 HTTP 메시지 생성 ➡️ SOCKET 라이브러리를 통해 요청 패킷을 서버로 전달 ➡️ 서버로 요청 패킷이 도착하면 HTTP 응답 메시지 생성 ➡️ SOCKET 라이브러리를 통해 응답 패킷을 웹 브라우저로 전달 ➡️ 웹 브라우저로 응답 패킷이 도착하면 HTML 렌더링
   
   </details>
   
