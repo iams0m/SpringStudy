@@ -298,6 +298,17 @@
      * `PATCH` 지원이 안 될 경우, `POST` 사용    
    * `DELETE`
      * 리소스 제거
-  
+
+  * HTTP 메서드 속성
+     * `안전 (Safe Methods)`
+       * 계속 호출해도 리소스 변경 X  
+     * `멱등 (Idempotent Methods)`
+       * 같은 요청을 여러번 해도 동일 결과 조회 (GET, PUT, DELETE)
+       * 외부 요인으로 중간에 리소스가 변경되는 것까지 고려 X
+     * `캐시 가능(Cacheable Methods)`
+       * GET, HEAD 캐시 사용 가능
+
+##### `Section 5) HTTP 메서드 활용`
+
   </details>
   
