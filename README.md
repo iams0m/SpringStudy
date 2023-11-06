@@ -261,6 +261,7 @@
 
 ##### `Section 3) HTTP 기본`
  * `HTTP 특징`
+
    * `클라이언트 서버 구조`
      * 클라이언트 : 서버에 요청을 보내고, 응답 대기 (Request) ➡️ 서버 : 요청에 대한 결과를 만들어서 응답 (Response)
    * `무상태 프로토콜 (Stateless)`
@@ -270,7 +271,17 @@
    * `비연결성 (Connectionless)`
      * 클라이언트 요청이 들어오면, 서버는 응답을 하고 연결 유지 X ➡️ 최소한의 자원 유지로 서버 자원 효율적으로 사용 가능
      * HTTP : 연결을 유지하지 않는 모델, 비연결성의 한계를 극복한 `HTTP 지속 연결 (Persistent Connections)`사용 
-   * `HTTP 메시지` ⭐⭐⭐
+   * `HTTP 메시지`
+     * HTTP 메시지 구조 
+       * `start-line`
+         * `request-line`
+           * method SP request-target SP HTTP-version CRLF 
+         * `status-line`
+           * HTTP-version SP status-code SP reason-phrase CRLF 
+       * `header`
+         * field-name ":" OWS field-value OWS (OWS : 띄어쓰기 허용)
+       * `empty line (CRLF)`
+       * `message body` 
    * `단순함, 확장 가능`
 
 ##### `Section 4) HTTP 메서드`
