@@ -367,5 +367,43 @@
     * `500 Internal Server Error` : 서버 내부 문제로 오류 발생
     * `503 Service Unavailable` : 서비스 이용 불가 (➡️ 서버가 일시적인 과부하 또는 예정된 작업으로 잠시 요청 처리 X)
 
+##### `Section 7) HTTP 헤더1 - 일반 헤더`
+ * `HTTP 헤더`
+   * HTTP 전송에 필요한 모든 부가 정보
+   * HTTP 표준 : `RFC7230`
+      * 표현
+          * 표현 데이터를 해석할 수 있는 정보 제공, 전송과 응답 둘 다 사용  
+          * `Content-Type` : 표현 데이터 형식 설명
+          * `Content-Encoding` : 표현 데이터 압축 방식
+          * `Content-Language` : 표현 데이터 자연 언어
+          * `Content-Length` : 표현 데이터 길이
+     * 협상 (Content Negotiation)
+          * 클라이언트가 선호하는 표현 요청, 요청시에만 사용, 구체적인 것이 우선
+          * `Accept` : 클라이언트가 선호하는 미디어 타입 전달
+          * `Accept-Charset` : 클라이언트가 선호하는 문자 인코딩
+          * `Accept-Encoding` : 클라이언트가 선호하는 압축 인코딩
+          * `Accept-Language` : 클라이언트가 선호하는 자연 언어
+      * 전송 방식
+          * `단순 전송` - Content-Length
+          * `압축 전송` - Content-Encoding: gzip
+          * `분할 전송` - Transfer-Encoding: chunked, Content-Length 사용 불가
+          * `범위 전송` - Range, Content-Range
+       * 일반 정보
+         * `From` : 유저 에이전트의 이메일 정보
+         * `Referer` : 현재 요청된 페이지의 이전 웹 페이지 주소
+         * `User-Agent` : 유저 에이전트(클라이언트) 애플리케이션 정보
+         * `Server` : 요청을 처리하는 오리진 서버의 소프트웨어 정보
+         * `Date` : 메시지 생성 날짜
+       * 특별한 정보
+         * `Host` : 요청한 호스트 정보 (도메인)
+         * `Location` : 페이지 리다이렉션
+         * `Allow` : 허용 가능한 HTTP 메서드 
+         * `Retry-After` : 유저 에이전트가 다음 요청을 하기까지 기다려야 하는 시간
+       * 인증
+         * `Authorization` : 클라이언트 인증 정보를 서버에 전달
+         * `WWW-Authenticate` : 리소스 접근시 필요한 인증 방법 정의 (➡️ 401 Unauthorized 응답과 함께 사용)
+       * 쿠키 
+
+
   </details>
   
