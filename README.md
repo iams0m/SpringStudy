@@ -370,7 +370,7 @@
 ##### `Section 7) HTTP 헤더1 - 일반 헤더`
  * `HTTP 헤더`
    * HTTP 전송에 필요한 모든 부가 정보
-   * HTTP 표준 : `RFC7230`
+   * HTTP 표준 : `RFC723x`
       * 표현
           * 표현 데이터를 해석할 수 있는 정보 제공, 전송과 응답 둘 다 사용  
           * `Content-Type` : 표현 데이터 형식 설명
@@ -402,8 +402,12 @@
        * 인증
          * `Authorization` : 클라이언트 인증 정보를 서버에 전달
          * `WWW-Authenticate` : 리소스 접근시 필요한 인증 방법 정의 (➡️ 401 Unauthorized 응답과 함께 사용)
-       * 쿠키 
-
+       * 쿠키
+         * 클라이언트가 서버에서 받은 쿠키를 저장하고, HTTP 요청시 서버로 전달
+         * 쿠키 사용시, 무상태 프로토콜(Stateless)인 HTTP의 특성을 극복하여 사용자 로그인 세션 관리 용이
+         * 쿠키 정보는 항상 서버에 전송됨 ➡️ 추가 네트워크 트래픽 유발 (최소한의 정보만 사용하고, 보안에 민감한 데이터 저장하지 않기)
+         * `Set-Cookie` : 서버에서 클라이언트로 쿠키 전달 (응답)
+           * 예) set-cookie: **sessionId=abcde1234**; **expires=Sat, 26-Dec-2020 00:00:00 GMT**; **path=/**; **domain=.google.com**; **Secure**
 
   </details>
   
