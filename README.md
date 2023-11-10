@@ -409,5 +409,7 @@
          * `Set-Cookie` : 서버에서 클라이언트로 쿠키 전달 (응답)
            * 예) set-cookie: **sessionId=abcde1234**; **expires=Sat, 26-Dec-2020 00:00:00 GMT**; **path=/**; **domain=.google.com**; **Secure**
 
+##### `Section 8) HTTP 헤더2 - 캐시와 조건부 요청`
+
   </details>
   
