@@ -466,3 +466,8 @@
          * `must-revalidate` : 항상 오류 발생 (⚠️ 중요한 정보를 사용할 경우, 예전 데이터를 보여준다면 큰 문제 발생) ➡️ `504 Gateway Timeout`
   </details>
   
+#### 04. 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
+  <details> 
+   <summary> 📑 정리 </summary>
+
+  </details>
