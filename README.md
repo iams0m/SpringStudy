@@ -470,4 +470,5 @@
   <details> 
    <summary> 📑 정리 </summary>
 
+##### `Section 1) 웹 애플리케이션 이해`
   </details>
