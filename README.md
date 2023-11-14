@@ -471,4 +471,6 @@
    <summary> 📑 정리 </summary>
 
 ##### `Section 1) 웹 애플리케이션 이해`
+
+##### `Section 2) 서블릿`
   </details>
