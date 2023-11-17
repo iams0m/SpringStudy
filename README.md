@@ -4,7 +4,7 @@
 
 #### 개발 환경
 * `Java 11`
-* `SpringBoot v2.7.14`
+* `SpringBoot v2.7.17`
 * `Dependencies` : Spring Web, Thymeleaf, JPA
 * `Test` : JUnit5
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
@@ -535,5 +535,6 @@
     * 렌더링 될 페이지를 자바스크립트를 사용해 클라이언트 측에서 동적으로 생성하여 적용하는 방식
     * 주로 동적인 화면에 사용
     * 첫 로딩에서 빈 html 파일에 필요한 번들파일을 모두 다운로드 받음
-  
+
+##### `Section 2) 서블릿`  
   </details>
