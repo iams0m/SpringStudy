@@ -10,6 +10,9 @@
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
 * `Build` : Gradle
 
+<details> 
+   <summary> 📑 정리 </summary>
+
 `Section 1) 웹 애플리케이션 이해`
 * `웹 서버 (Web Server)` : http 프로토콜로 서로 데이터를 주고 받을 수 있고, 정적 데이터 및 기타 부가 기능 제공
 * `웹 애플리케이션 서버 (WAS - Web Application Server)` : `웹 서버` 기능 + 프로그램 코드를 실행하여 애플리케이션 로직 수행
@@ -77,3 +80,4 @@
     * 첫 로딩에서 빈 html 파일에 필요한 번들파일을 모두 다운로드 받음
 
 ##### `Section 2) 서블릿`  
+</details>
