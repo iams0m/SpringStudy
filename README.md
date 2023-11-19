@@ -5,7 +5,7 @@
 #### 개발 환경
 * `Java 11`
 * `SpringBoot v2.7.17`
-* `Dependencies` : Spring Web, Thymeleaf, JPA
+* `Dependencies` : Spring Web, Thymeleaf, JPA, Lombok
 * `Test` : JUnit5
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
 * `Build` : Gradle
