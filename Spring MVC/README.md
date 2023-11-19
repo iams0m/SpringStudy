@@ -81,7 +81,6 @@
     * 첫 로딩에서 빈 html 파일에 필요한 번들파일을 모두 다운로드 받음
 
 ##### `Section 2) 서블릿` 
-#### ✔️ 톰캣 서버를 내장하고 있는 스프링 부트 사용으로 별도 설치 없이 편리하게 서블릿 코드 실행 가능
 * 스프링 부트 서블릿 환경 구성
    * `@ServletComponentScan`
       * 서블릿 자동 등록
@@ -115,5 +114,11 @@
       * `HttpServletRequest` : 클라이언트로부터 전달 받은 HTTP request 메시지의 내용을 객체로 만들어줌
       * `HttpServletResponse` : service() 메서드에서 수행한 비즈니스 로직의 결과물을 담을 객체를 만들어줌 
 
+* 서블릿 컨테이너 동작 방식
+   #### 1. 스프링 부트 실행시, 내장된 톰캣 서버 실행
+   #### 2. 톰캣 서버가 실행되면, ServletComponentScan이 동작하면서 Servlet Container에 Servlet 객체 등록
+   #### 3. 클라이언트로부터 HTTP Request가 들어오면, WAS에서 이를 HttpServletRequest 객체로 만들어 Servlet 객체에 전달
+   #### 4. Servlet 객체는 service() 메서드를 호출하고, 비즈니스 로직 수행
+   #### 5. service() 메서드에서 수행한 비즈니스 로직의 결과물을 HttpServletResponse 객체에 담아 클라이언트에게 전달   
 
 </details>
