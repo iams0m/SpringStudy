@@ -4,10 +4,10 @@
 #### 개발 환경
 * `Java 11`
 * `SpringBoot v2.7.17`
-* `Dependencies` : Spring Web, Thymeleaf, JPA
+* `Dependencies` : Spring Web, Lombok
 * `Test` : JUnit5
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
-* `Build` : Gradle
+* `Build` : Gradle ➡️ IntelliJ IDEA (자바 직접 실행으로 실행 속도 향상)
 
 ### 🍃 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
 
@@ -80,5 +80,40 @@
     * 주로 동적인 화면에 사용
     * 첫 로딩에서 빈 html 파일에 필요한 번들파일을 모두 다운로드 받음
 
-##### `Section 2) 서블릿`  
+##### `Section 2) 서블릿` 
+#### ✔️ 톰캣 서버를 내장하고 있는 스프링 부트 사용으로 별도 설치 없이 편리하게 서블릿 코드 실행 가능
+* 스프링 부트 서블릿 환경 구성
+   * `@ServletComponentScan`
+      * 서블릿 자동 등록
+      * main() 메서드가 존재하는 클래스 또는 최상위 경로의 클래스에 부착하는 애노테이션
+      * 하위 경로에 존재하는 모든 클래스 스캔
+      ```java
+      @ServletComponentScan // 서블릿 자동 등록
+      @SpringBootApplication
+      public class ServletApplication {
+         public static void main(String[] args)  {
+   		SpringApplication.run(ServletApplication.class, args);
+   	   }
+      }
+      ```
+
+   * `@WebServlet`, `HttpServlet`, `service() 메서드`
+      ```java
+      @WebServlet(name = "사용할 서블릿 객체명", urlPatterns = "url 매핑 주소")
+      public class HelloServlet extends HttpServlet {
+
+         @Override
+         protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         }
+      }
+      ```
+      * `@WebServlet` : `@ServletComponentScan`의 대상임을 명시
+      * `HttpServlet` : Servlet Container에 등록된 Servlet 객체가 호출되면, service() 메서드 자동 호출 ➡️ service() 메서드를 오버라이드하기 위해 HttpServlet 상속 필수
+      * `service() 메서드` : response의 결과물을 생성하는 비즈니스 로직을 실행하는 코드 작성
+
+   * `HttpServletRequest`, `HttpServletResponse`
+      * `HttpServletRequest` : 클라이언트로부터 전달 받은 HTTP request 메시지의 내용을 객체로 만들어줌
+      * `HttpServletResponse` : service() 메서드에서 수행한 비즈니스 로직의 결과물을 담을 객체를 만들어줌 
+
+
 </details>
