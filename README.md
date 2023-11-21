@@ -5,10 +5,10 @@
 #### 개발 환경
 * `Java 11`
 * `SpringBoot v2.7.17`
-* `Dependencies` : Spring Web, Thymeleaf, JPA, Lombok
+* `Dependencies` : Spring Web, Lombok
 * `Test` : JUnit5
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
-* `Build` : Gradle
+* `Build` : Gradle ➡️ IntelliJ IDEA (자바 직접 실행으로 실행 속도 향상)
 
 #### 01. 스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술
   <details> 
