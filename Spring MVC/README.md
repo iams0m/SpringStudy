@@ -130,4 +130,16 @@
    #### 4. Servlet 객체는 service() 메서드를 호출하고, 비즈니스 로직 수행
    #### 5. service() 메서드에서 수행한 비즈니스 로직의 결과물을 HttpServletResponse 객체에 담아 클라이언트에게 전달   
 
+* HTTP 요청 데이터
+   * `HTTP 요청 메시지를 통해 클라이언트 ➡️ 서버로 데이터를 전달하는 방법`
+      #### ✔️ `GET` - 쿼리 파라미터
+      * message body 없이 URL의 쿼리 파라미터에 데이터를 포함하여 전달
+      * 예) 검색, 필터, 페이징 등
+      #### ✔️ `POST` - HTML Form
+      * message body에 쿼리 파라미터 형식으로 데이터 전달
+      * 예) 회원가입, 상품 주문 등
+      #### ✔️ `HTTP message body`에 데이터를 직접 담아서 요청
+      * HTTP API에 주로 사용
+      * 데이터 형식 : **JSON(주로 사용)**, XML, TXT 등
+
 </details>
