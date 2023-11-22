@@ -150,8 +150,14 @@
       ```
   
       #### ✔️ `POST` - HTML Form
-      * message body에 쿼리 파라미터 형식으로 데이터 전달
+      * message body에 쿼리 파라미터 형식으로 데이터 전달 ➡️ 따라서 body에 포함된 데이터가 어떤 형식인지 `content-type` 지정 필수
+      * `content-type: application/x-www-form-urlencoded`
+         * `content-type` : HTTP 메시지 바디의 데이더 형식 지정 
+         * `application/x-www-form-urlencoded`
+            * form으로 데이터 전송
+            * **`GET` URL 쿼리 파라미터 형식**과 동일 ➡️ 쿼리 파라미터 조회 메서드 그대로 사용 가능 (`request.getParameter()`)
       * 예) 회원가입, 상품 주문 등
+
       #### ✔️ `HTTP message body`에 데이터를 직접 담아서 요청
       * HTTP API에 주로 사용
       * 데이터 형식 : **JSON(주로 사용)**, XML, TXT 등
