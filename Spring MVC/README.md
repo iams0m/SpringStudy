@@ -161,5 +161,20 @@
       #### ✔️ `HTTP message body`에 데이터를 직접 담아서 요청
       * HTTP API에 주로 사용
       * 데이터 형식 : **JSON(주로 사용)**, XML, TXT 등
+         #### ✔️ 단순 text를 사용할 경우
+         * InputStream 사용
+            ```java
+            @WebServlet(name = "requestBodyStringServlet", urlPatterns = "/request-body-string")
+            public class RequestBodyStringServlet extends HttpServlet {
+   
+               @Override
+               protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                  ServletInputStream inputStream = request.getInputStream(); // byte 코드 반환
+                  String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8); // byte 코드 ➡️ 문자(String)
+               }
+            }
+            ```
+
+        #### ✔️ JSON 형식을 사용할 경우
 
 </details>
