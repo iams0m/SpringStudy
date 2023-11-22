@@ -135,6 +135,20 @@
       #### ✔️ `GET` - 쿼리 파라미터
       * message body 없이 URL의 쿼리 파라미터에 데이터를 포함하여 전달
       * 예) 검색, 필터, 페이징 등
+      ```java
+      // 단일 파라미터 조회
+      String username = request.getParameter("username"); 
+
+      // 복수 파라미터 조회
+      String[] usernames = request.getParameterValues("username");
+
+      // 파라미터 이름들 모두 조회
+      Enumeration<String> parameterNames = request.getParameterNames();
+
+      // 파라미터를 Map으로 조회 
+      Map<String, String[]> parameterMap = request.getParameterMap(): 
+      ```
+  
       #### ✔️ `POST` - HTML Form
       * message body에 쿼리 파라미터 형식으로 데이터 전달
       * 예) 회원가입, 상품 주문 등
