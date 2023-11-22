@@ -162,6 +162,7 @@
       * HTTP API에 주로 사용
       * 데이터 형식 : **JSON(주로 사용)**, XML, TXT 등
          #### ✔️ 단순 text를 사용할 경우
+         * content-type : **text/plain**
          * InputStream 사용
             ```java
             @WebServlet(name = "requestBodyStringServlet", urlPatterns = "/request-body-string")
@@ -175,6 +176,24 @@
             }
             ```
 
-        #### ✔️ JSON 형식을 사용할 경우
+        #### ✔️ JSON 형식을 사용할 경우 (주로 사용)
+        * content-type : **application/json**
+        * InputStream & ObjectMapper 사용
+           ```java
+            @WebServlet(name = "requestBodyJsonServlet", urlPatterns = "/request-body-json")
+            public class RequestBodyJsonServlet extends HttpServlet {
+   
+               @Override
+               protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                  ServletInputStream inputStream = request.getInputStream(); // byte 코드 반환
+                  String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8); // byte 코드 ➡️ 문자(String)
+                  HelloData helloData = objectMapper.readValue(messageBody, HelloData.class); // JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환         
+               }
+            }
+            ```
+        * ObjectMapper
+           * JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환
+           * JSON 변환 라이브러리(Jackson, Gson 등)에 포함
+              * Spring Boot : 기본으로 Jackson 라이브러리 제공      
 
 </details>
