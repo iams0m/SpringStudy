@@ -202,4 +202,16 @@
            * JSON 변환 라이브러리(Jackson, Gson 등)에 포함
               * Spring Boot : 기본으로 Jackson 라이브러리 제공      
 
+* HTTP 응답 데이터
+     #### ✔️ 단순 텍스트 응답
+     * `response.getWriter()` 사용  
+
+     #### ✔️ HTML 응답
+     * content-type : **text/html**
+     * `response.getWriter()` 사용 
+
+     #### ✔️ HTTP API - MessageBody JSON 응답  
+     * content-type : **application/json** (utf-8 형식을 사용하도록 정의되어 있음 ➡️ charset=utf-8 지원 ❌️)
+     * `objectMapper.writeValueAsString()` : 객체 ➡️ JSON 문자
+
 </details>
