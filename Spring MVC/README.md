@@ -114,14 +114,20 @@
       * 개발자가 HTTP 요청 메시지, HTTP 응답 메시지를 편리하게 사용할 수 있도록 개발자 대신 HTTP 요청 메시지 파싱
       * `HttpServletRequest` : 클라이언트로부터 전달 받은 HTTP request 메시지의 내용을 객체로 만들어줌
          * HTTP 요청 메시지
-            *  `START LINE` : HTTP 메서드, URL, 쿼리 스트링, 스키마, 프로토콜
-            *  `헤더` : 헤더 조회
-            *  `바디` : form 파라미터 형식 조회, message body 데이터 직접 조회
+            *  `start-line` : HTTP 메서드, URL, 쿼리 스트링, 스키마, 프로토콜
+            *  `request-header` : 헤더 조회
+            *  `message-body` : form 파라미터 형식 조회, message body 데이터 직접 조회
          
          * 임시 저장소 기능
          
          * 세션 관리 기능
-      * `HttpServletResponse` : service() 메서드에서 수행한 비즈니스 로직의 결과물을 담을 객체를 만들어줌 
+      * `HttpServletResponse` : service() 메서드에서 수행한 비즈니스 로직의 결과물을 담을 객체를 만들어줌
+         * HTTP 응답 메시지
+            * `status-line` : HTTP 응답 코드 지정 
+            * `response-headers` : 헤더 생성 (Content-Type, Cache-Control 등) 
+            * `message-body` : 바디 내용 생성
+       
+         * Content, 쿠키, Redirect 편의 메서드 제공 
 
 * 서블릿 컨테이너 동작 방식
    #### 1. 스프링 부트 실행시, 내장된 톰캣 서버 실행
