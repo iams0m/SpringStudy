@@ -14,7 +14,7 @@
 <details> 
    <summary> 📑 정리 </summary>
 
-`Section 1) 웹 애플리케이션 이해`
+##### `Section 1) 웹 애플리케이션 이해`
 * `웹 서버 (Web Server)` : http 프로토콜로 서로 데이터를 주고 받을 수 있고, 정적 데이터 및 기타 부가 기능 제공
 * `웹 애플리케이션 서버 (WAS - Web Application Server)` : `웹 서버` 기능 + 프로그램 코드를 실행하여 애플리케이션 로직 수행
 * `웹 시스템 구성 - WEB, WAS, DB`
@@ -213,5 +213,7 @@
      #### ✔️ HTTP API - MessageBody JSON 응답  
      * content-type : **application/json** (utf-8 형식을 사용하도록 정의되어 있음 ➡️ charset=utf-8 지원 ❌️)
      * `objectMapper.writeValueAsString()` : 객체 ➡️ JSON 문자
+
+##### `Section 3) 서블릿, JSP, MVC 패턴`
 
 </details>
