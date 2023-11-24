@@ -576,4 +576,85 @@
    #### 3. 클라이언트로부터 HTTP Request가 들어오면, WAS에서 이를 HttpServletRequest 객체로 만들어 Servlet 객체에 전달
    #### 4. Servlet 객체는 service() 메서드를 호출하고, 비즈니스 로직 수행
    #### 5. service() 메서드에서 수행한 비즈니스 로직의 결과물을 HttpServletResponse 객체에 담아 클라이언트에게 전달   
-  </details>
+
+* HTTP 요청 데이터
+   * `HTTP 요청 메시지를 통해 클라이언트 ➡️ 서버로 데이터를 전달하는 방법`
+      #### ✔️ `GET` - 쿼리 파라미터
+      * message body 없이 URL의 쿼리 파라미터에 데이터를 포함하여 전달
+      * 예) 검색, 필터, 페이징 등
+      ```java
+      // 단일 파라미터 조회
+      String username = request.getParameter("username"); 
+
+      // 복수 파라미터 조회
+      String[] usernames = request.getParameterValues("username");
+
+      // 파라미터 이름들 모두 조회
+      Enumeration<String> parameterNames = request.getParameterNames();
+
+      // 파라미터를 Map으로 조회 
+      Map<String, String[]> parameterMap = request.getParameterMap(): 
+      ```
+  
+      #### ✔️ `POST` - HTML Form
+      * message body에 쿼리 파라미터 형식으로 데이터 전달 ➡️ 따라서 body에 포함된 데이터가 어떤 형식인지 `content-type` 지정 필수
+      * `content-type: application/x-www-form-urlencoded`
+         * `content-type` : HTTP 메시지 바디의 데이더 형식 지정 
+         * `application/x-www-form-urlencoded`
+            * form으로 데이터 전송
+            * **`GET` URL 쿼리 파라미터 형식**과 동일 ➡️ 쿼리 파라미터 조회 메서드 그대로 사용 가능 (`request.getParameter()`)
+      * 예) 회원가입, 상품 주문 등
+
+      #### ✔️ `HTTP message body`에 데이터를 직접 담아서 요청
+      * HTTP API에 주로 사용
+      * 데이터 형식 : **JSON(주로 사용)**, XML, TXT 등
+         #### ✔️ 단순 text를 사용할 경우
+         * content-type : **text/plain**
+         * InputStream 사용
+            ```java
+            @WebServlet(name = "requestBodyStringServlet", urlPatterns = "/request-body-string")
+            public class RequestBodyStringServlet extends HttpServlet {
+   
+               @Override
+               protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                  ServletInputStream inputStream = request.getInputStream(); // byte 코드 반환
+                  String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8); // byte 코드 ➡️ 문자(String)
+               }
+            }
+            ```
+
+        #### ✔️ JSON 형식을 사용할 경우 (주로 사용)
+        * content-type : **application/json**
+        * InputStream & ObjectMapper 사용
+           ```java
+            @WebServlet(name = "requestBodyJsonServlet", urlPatterns = "/request-body-json")
+            public class RequestBodyJsonServlet extends HttpServlet {
+   
+               @Override
+               protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                  ServletInputStream inputStream = request.getInputStream(); // byte 코드 반환
+                  String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8); // byte 코드 ➡️ 문자(String)
+                  HelloData helloData = objectMapper.readValue(messageBody, HelloData.class); // JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환         
+               }
+            }
+            ```
+        * ObjectMapper
+           * JSON 결과를 파싱해서 사용할 수 있는 자바 객체로 변환
+           * JSON 변환 라이브러리(Jackson, Gson 등)에 포함
+              * Spring Boot : 기본으로 Jackson 라이브러리 제공      
+
+* HTTP 응답 데이터
+     #### ✔️ 단순 텍스트 응답
+     * `response.getWriter()` 사용  
+
+     #### ✔️ HTML 응답
+     * content-type : **text/html**
+     * `response.getWriter()` 사용 
+
+     #### ✔️ HTTP API - MessageBody JSON 응답  
+     * content-type : **application/json** (utf-8 형식을 사용하도록 정의되어 있음 ➡️ charset=utf-8 지원 ❌️)
+     * `objectMapper.writeValueAsString()` : 객체 ➡️ JSON 문자
+
+##### `Section 3) 서블릿, JSP, MVC 패턴`
+
+</details>
