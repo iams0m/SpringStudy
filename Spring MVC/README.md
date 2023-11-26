@@ -231,4 +231,6 @@
       * **모델 (Model)** : 뷰에 출력할 데이터를 담아둠
       * **뷰 (View)** : 모델에 담겨있는 데이터를 사용하여 화면을 그려줌 (HTML 생성)
 
+         <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/8f031808-6885-4227-8bcc-ffc9e0640d8b"/>
+
 </details>
