@@ -227,10 +227,30 @@
  
 * MVC 패턴 (Model View Controller)
    * 하나의 서블릿이나 JSP로 처리하던 것을 Controller와 View 라는 영역으로 서로 역할을 나눈 것
-      * **컨트롤러 (Controller)** : HTTP 요청을 받아서 파라미터를 검증하고, 비즈니스 로직 실행 ➡️ 뷰에 전달할 결과 데이터를 조회하여 모델에 담음
-      * **모델 (Model)** : 뷰에 출력할 데이터를 담아둠
-      * **뷰 (View)** : 모델에 담겨있는 데이터를 사용하여 화면을 그려줌 (HTML 생성)
+      * **컨트롤러 (Controller)**
+         * HTTP 요청을 받아서 파라미터를 검증하고, 비즈니스 로직 실행 ➡️ 뷰에 전달할 결과 데이터를 조회하여 모델에 담음
+         * `request.getRequestDispatcher()` : 컨트롤러 ➡️ 뷰
+         * `dispatcher.forward()` : 다른 서블릿이나 JSP로 이동 (서버 내부에서 다시 호출 발생 ➡️ 클라이언트 인지 ❌️)
+      
+      * **모델 (Model)**
+         * 뷰에 출력할 데이터를 담아둠
+         * HttpServletRequest 객체 사용 (➡️ request 내부에 데이터 저장소 존재)
+            * `request.setAttribute()` : request 객체에 데이터를 보관하여 뷰에 전달
+            * `request.getAttribute()` : 뷰로 데이터 출력 
+      
+      * **뷰 (View)** : 모델에 담겨있는 데이터를 사용하여 화면을 그려줌 (HTML 생성)      
 
-         <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/8f031808-6885-4227-8bcc-ffc9e0640d8b"/>
+   * MVC2 패턴 동작 방식 
+   
+     <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/8f031808-6885-4227-8bcc-ffc9e0640d8b"/>
 
-</details>
+* MVC 패턴의 한계
+    #### ✔️ 포워드 중복
+    #### ✔️ ViewPath 중복
+    #### ✔️ 사용하지 않는 코드 존재
+    #### ✔️ 공통 처리의 어려움
+
+   #### 🤔 그렇다면 어떻게 MVC 패턴의 단점을 해결할 것인가?
+   * `프론트 컨트롤러 (Front Controller)` : 컨트롤러 호출 전에 먼저 공통 기능 처리
+
+  </details>
