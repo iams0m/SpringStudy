@@ -254,13 +254,13 @@
         <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/11d2a8c9-7658-4890-b468-96af39d19edd"/>
 
 * 프론트 컨트롤러 - V2 구조
-   * V1 구조 : 컨트롤러 ➡️ 뷰로 이동하는 부분에 중복 존재, 코드가 깔끔하지 않음 ➡️ 별도로 뷰를 처리하는 객체를 생성하여 V1 구조 개선
+   * V1 구조 : 컨트롤러 ➡️ 뷰로 이동하는 부분에 중복 존재, 코드가 깔끔하지 않음 ➡️ **별도로 뷰를 처리하는 객체를 생성**하여 V1 구조 개선
 
         <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/acd0290f-068d-483e-9c01-4d24e742d4cf"/>
         
         * 기존 V1의 컨트롤러에 존재하는 View 관련 로직을 MyView 객체에 추가 ➡️ V2 Controller는 로직을 처리한 후, MyView 객체 반환 ➡️ Servlet에서 이를 받아 render() 메서드 실행 ➡️ MyView 객체가 JSP를 forward하여 처리
     
 * 프론트 컨트롤러 - V3 구조
-  * V2 구조 : Controller에서 사용하지 않는 HttpServletRequest, HttpServletResponse 존재 ➡️ Model 객체를 추가하여 컨트롤러가 서블릿 기술을 전혀 사용하지 않도록 변경
+  * V2 구조 : Controller에서 사용하지 않는 HttpServletRequest, HttpServletResponse 존재 ➡️ **서블릿 의존 코드를 제거하고, Model을 추가**하여 V2 구조 개선 
 
   </details>
