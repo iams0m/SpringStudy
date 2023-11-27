@@ -227,17 +227,8 @@
  
 * MVC 패턴 (Model View Controller)
    * 하나의 서블릿이나 JSP로 처리하던 것을 Controller와 View 라는 영역으로 서로 역할을 나눈 것
-      * **컨트롤러 (Controller)**
-         * HTTP 요청을 받아서 파라미터를 검증하고, 비즈니스 로직 실행 ➡️ 뷰에 전달할 결과 데이터를 조회하여 모델에 담음
-         * `request.getRequestDispatcher()` : 컨트롤러 ➡️ 뷰
-         * `dispatcher.forward()` : 다른 서블릿이나 JSP로 이동 (서버 내부에서 다시 호출 발생 ➡️ 클라이언트 인지 ❌️)
-      
-      * **모델 (Model)**
-         * 뷰에 출력할 데이터를 담아둠
-         * HttpServletRequest 객체 사용 (➡️ request 내부에 데이터 저장소 존재)
-            * `request.setAttribute()` : request 객체에 데이터를 보관하여 뷰에 전달
-            * `request.getAttribute()` : 뷰로 데이터 출력 
-      
+      * **컨트롤러 (Controller)** : HTTP 요청을 받아서 파라미터를 검증하고, 비즈니스 로직 실행 ➡️ 뷰에 전달할 결과 데이터를 조회하여 모델에 담음
+      * **모델 (Model)** : 뷰에 출력할 데이터를 담아둠
       * **뷰 (View)** : 모델에 담겨있는 데이터를 사용하여 화면을 그려줌 (HTML 생성)      
 
    * MVC2 패턴 동작 방식 
@@ -260,8 +251,16 @@
 * 프론트 컨트롤러 - V1 구조
    * 모든 HTTP 요청을 받는 FrontController 클래스 생성 ➡️ 해당 클래스에서 URI를 통해 Controller의 매핑 정보 조회 ➡️ Controller 호출하여 로직 처리
 
-     <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/11d2a8c9-7658-4890-b468-96af39d19edd"/>
+        <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/11d2a8c9-7658-4890-b468-96af39d19edd"/>
 
 * 프론트 컨트롤러 - V2 구조
    * V1 구조 : 컨트롤러 ➡️ 뷰로 이동하는 부분에 중복 존재, 코드가 깔끔하지 않음 ➡️ 별도로 뷰를 처리하는 객체를 생성하여 V1 구조 개선
+
+        <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/acd0290f-068d-483e-9c01-4d24e742d4cf"/>
+        
+        * 기존 V1의 컨트롤러에 존재하는 View 관련 로직을 MyView 객체에 추가 ➡️ V2 Controller는 로직을 처리한 후, MyView 객체 반환 ➡️ Servlet에서 이를 받아 render() 메서드 실행 ➡️ MyView 객체가 JSP를 forward하여 처리
+    
+* 프론트 컨트롤러 - V3 구조
+  * V2 구조 : Controller에서 사용하지 않는 HttpServletRequest, HttpServletResponse 존재 ➡️ Model 객체를 추가하여 컨트롤러가 서블릿 기술을 전혀 사용하지 않도록 변경
+
   </details>
