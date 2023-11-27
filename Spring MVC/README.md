@@ -257,5 +257,11 @@
       * 프론트 컨트롤러를 제외한 나머지 컨트롤러는 서블릿 사용하지 않아도 됨
 
 ##### `Section 4) MVC 프레임워크 만들기` 
+* 프론트 컨트롤러 - V1 구조
+   * 모든 HTTP 요청을 받는 FrontController 클래스 생성 ➡️ 해당 클래스에서 URI를 통해 Controller의 매핑 정보 조회 ➡️ Controller 호출하여 로직 처리
 
+     <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/11d2a8c9-7658-4890-b468-96af39d19edd"/>
+
+* 프론트 컨트롤러 - V2 구조
+   * V1 구조 : 컨트롤러 ➡️ 뷰로 이동하는 부분에 중복 존재, 코드가 깔끔하지 않음 ➡️ 별도로 뷰를 처리하는 객체를 생성하여 V1 구조 개선
   </details>
