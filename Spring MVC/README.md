@@ -261,6 +261,9 @@
         * 기존 V1의 컨트롤러에 존재하는 View 관련 로직을 MyView 객체에 추가 ➡️ V2 Controller는 로직을 처리한 후, MyView 객체 반환 ➡️ Servlet에서 이를 받아 render() 메서드 실행 ➡️ MyView 객체가 JSP를 forward하여 처리
     
 * 프론트 컨트롤러 - V3 구조
-  * V2 구조 : Controller에서 사용하지 않는 HttpServletRequest, HttpServletResponse 존재 ➡️ **서블릿 의존 코드를 제거하고, Model을 추가**하여 V2 구조 개선 
+  * V2 구조 : Controller에서 사용하지 않는 코드를 파라미터로 전달 받음(HttpServletRequest, HttpServletResponse), 뷰 이름 중복 ➡️ 서블릿 의존 코드를 제거하기 위해 **Model을 추가**하고, **중복되는 뷰 이름을 제거**하여 V2 구조 개선
+ 
+       <img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/25e2429a-0fa5-4fd8-92b4-e74c1c98f45f"/>
+
 
   </details>
