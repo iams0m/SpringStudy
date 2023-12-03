@@ -567,8 +567,23 @@
       * `service() 메서드` : response의 결과물을 생성하는 비즈니스 로직을 실행하는 코드 작성
 
    * `HttpServletRequest`, `HttpServletResponse`
+      * 개발자가 HTTP 요청 메시지, HTTP 응답 메시지를 편리하게 사용할 수 있도록 개발자 대신 HTTP 요청 메시지 파싱
       * `HttpServletRequest` : 클라이언트로부터 전달 받은 HTTP request 메시지의 내용을 객체로 만들어줌
-      * `HttpServletResponse` : service() 메서드에서 수행한 비즈니스 로직의 결과물을 담을 객체를 만들어줌 
+         * HTTP 요청 메시지
+            *  `start-line` : HTTP 메서드, URL, 쿼리 스트링, 스키마, 프로토콜
+            *  `request-header` : 헤더 조회
+            *  `message-body` : form 파라미터 형식 조회, message body 데이터 직접 조회
+         
+         * 임시 저장소 기능
+         
+         * 세션 관리 기능
+      * `HttpServletResponse` : service() 메서드에서 수행한 비즈니스 로직의 결과물을 담을 객체를 만들어줌
+         * HTTP 응답 메시지
+            * `status-line` : HTTP 응답 코드 지정 
+            * `response-headers` : 헤더 생성 (Content-Type, Cache-Control 등) 
+            * `message-body` : 바디 내용 생성
+       
+         * Content, 쿠키, Redirect 편의 메서드 제공 
 
 * 서블릿 컨테이너 동작 방식
    #### 1. 스프링 부트 실행시, 내장된 톰캣 서버 실행
@@ -655,6 +670,97 @@
      * content-type : **application/json** (utf-8 형식을 사용하도록 정의되어 있음 ➡️ charset=utf-8 지원 ❌️)
      * `objectMapper.writeValueAsString()` : 객체 ➡️ JSON 문자
 
-##### `Section 3) 서블릿, JSP, MVC 패턴`
+##### `Section 3) MVC 패턴`
+* MVC 패턴 개요
+     #### ✔️ 너무 많은 역할
+     * 기존 방식
+        * Servlet : view 화면을 위한 html을 만드는 작업이 자바 코드에 섞여 지저분하고 복잡함
+        * JSP : 자바 코드, 데이터 조회 리포지토리 등 다양한 코드가 모두 JSP에 담겨 있음 ➡️ 🙁 너무 많은 역할 담당 (유지보수 어려움) 
+     #### ✔️ 비즈니스 로직과 뷰 렌더링 변경 라이프 사이클 상이
+     * 비즈니스 로직과 뷰 렌더링을 하나의 코드로 관리하면 유지보수 어려움  
+     #### ✔️ 기능 특화
+     * JSP와 같은 뷰 템플릿은 화면을 렌더링 하는데 최적화 되어 있기 때문에 이 부분의 업무만 담당하는 것이 효과적
+ 
+* MVC 패턴 (Model View Controller)
+   * 하나의 서블릿이나 JSP로 처리하던 것을 Controller와 View 라는 영역으로 서로 역할을 나눈 것
+      * **컨트롤러 (Controller)** : HTTP 요청을 받아서 파라미터를 검증하고, 비즈니스 로직 실행 ➡️ 뷰에 전달할 결과 데이터를 조회하여 모델에 담음
+      * **모델 (Model)** : 뷰에 출력할 데이터를 담아둠
+      * **뷰 (View)** : 모델에 담겨있는 데이터를 사용하여 화면을 그려줌 (HTML 생성)      
+
+   * MVC2 패턴 동작 방식 
+   
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/8f031808-6885-4227-8bcc-ffc9e0640d8b"/></p>
+
+* MVC 패턴의 한계
+    #### ✔️ 포워드 중복
+    #### ✔️ ViewPath 중복
+    #### ✔️ 사용하지 않는 코드 존재
+    #### ✔️ 공통 처리의 어려움
+
+   #### 🤔 그렇다면 어떻게 MVC 패턴의 단점을 해결할 것인가?
+   * **`프론트 컨트롤러 (Front Controller)`**
+      * 컨트롤러 호출 전, 먼저 **공통 기능 처리**
+      * 프론트 컨트롤러 서블릿 하나로 클라이언트의 요청을 받아 요청에 맞는 컨트롤러를 찾아 추가로 컨트롤러 호출
+      * 프론트 컨트롤러를 제외한 나머지 컨트롤러는 서블릿 사용하지 않아도 됨
+
+##### `Section 4) MVC 프레임워크 만들기` 
+#### 프론트 컨트롤러 도입 - V1
+* 모든 HTTP 요청을 받는 FrontController 클래스 생성 ➡️ 해당 클래스에서 URI를 통해 Controller의 매핑 정보 조회 ➡️ Controller 호출하여 로직 처리
+
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/11d2a8c9-7658-4890-b468-96af39d19edd"/></p>
+
+#### View 분리 - V2
+   * V1 구조 : 컨트롤러 ➡️ 뷰로 이동하는 부분에 중복 존재, 코드가 깔끔하지 않음 ➡️ **별도로 뷰를 처리하는 객체를 생성**하여 V1 구조 개선
+
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/acd0290f-068d-483e-9c01-4d24e742d4cf"/></p>
+        
+   * 기존 V1의 컨트롤러에 존재하는 View 관련 로직을 MyView 객체에 추가 ➡️ V2 Controller는 로직을 처리한 후, MyView 객체 반환 ➡️ Servlet에서 이를 받아 render() 메서드 실행 ➡️ MyView 객체가 JSP를 forward하여 처리
+    
+#### Model 추가 - V3
+  * V2 구조 : Controller에서 사용하지 않는 코드를 파라미터로 전달 받음(HttpServletRequest, HttpServletResponse), 뷰 이름 중복 ➡️ 서블릿 의존 코드를 제거하기 위해 **Model을 추가**하고, **중복되는 뷰 이름을 제거**하여 V2 구조 개선
+ 
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/25e2429a-0fa5-4fd8-92b4-e74c1c98f45f"/></p>
+   
+   #### ✔️ ModelView
+   * 뷰의 논리적인 이름과 뷰를 렌더링 할 때 필요한 model 객체를 map으로 가짐 ➡️ 컨트롤러 : 뷰에 필요한 데이터를 key, value로 넣어주면 됨 (프레임워크에 종속적), 실제 뷰의 물리적인 이름은 프론트 컨트롤러에서 처리 (viewResolver)
+   * `HttpServletRequest`가 제공하는 파라미터 : 프론트 컨트롤러가 `Map`에 담아 호출 ➡️ 응답 결과로 ModelView 객체 반환
+
+   #### ✔️viewResolver
+   * 실제 뷰를 찾아주는 해결사
+      #### 🤔 왜 뷰 리졸버를 써야할까 ?
+      * 폴더 이름이 변경될 경우, Controller 건들 필요 전혀 ❌️ ➡️ viewResolver 메서드 안에 있는 경로만 수정    
+
+
+#### 단순하고 실용적인 컨트롤러 - V4
+   * V3 구조 : 컨트롤러에 ModelView 객체를 생성하고 반환해야 하는 번거로움 존재 ➡️ 조금 더 단순하고 실용성 있는 V4 버전을 사용하여 V3 구조 개선
+
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/cbd716b6-9ba8-4303-9a60-2ff0f33b2b9b"/></p>
+
+   #### 기존 ➡️ 변경
+   * 인터페이스에 ModelView ⭕️ ➡️ **인터페이스에 ModelView ❌️**
+   * 컨트롤러 : ModelView 반환 ➡️ **뷰의 논리적인 이름인 ViewName만 반환**
+   * ModelView에서 model을 꺼냄 ➡️ **프론트 컨트롤러에서 model 객체를 파라미터로 넘김 (컨트롤러에서 모델을 별도로 생성할 필요 ❌️)**
+
+#### 유연한 컨트롤러 - V5
+   #### 🤔 하나의 프로젝트에서 여러가지 컨트롤러 방식을 사용하고 싶은 경우 어떻게 해야할까?
+   * V4 구조 : 프론트 컨트롤러에서 한가지 방식의 컨트롤러 인터페이스만 사용 가능 (인터페이스 제약으로 컨트롤러 방식 유연하게 사용 ❌️) ➡️ 프론트 컨트롤러가 다양한 방식의 컨트롤러를 처리할 수 있도록 **어댑터 패턴** 적용
+ 
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/f24a0925-badf-40ea-bba8-78a1416af6ae"/></p>  
+
+   #### 기존 ➡️ 변경
+   * 컨트롤러 (Controller) ➡️ 핸들러 (Handler)
+     * 컨트롤러 직접 매핑하여 사용 ➡️ 어댑터 사용으로 컨트롤러 뿐만 아니라 **어댑터가 지원하기만 하면 어떤 것이라도 URL에 매핑하여 사용 가능 !** 그래서 더 넓은 범위로 이름 변경
+     * 프론트 컨트롤러가 실제 컨트롤러 호출 ➡️ **어댑터를 통해 실제 컨트롤러 호출**
+    
+   #### ✔️ 핸들러
+   * 컨트롤러의 더 넓은 범위
+   
+   #### ✔️ 핸들러 어댑터
+   * 인터페이스의 스펙이 다를 때, 중간에 스펙이 맞도록 변환하여 다양한 종류의 컨트롤러를 호출할 수 있도록 하는 객체
+   * 컨트롤러가 반환한 뷰 이름을 ModelView로 만들어서 형식을 맞추어 반환
+  
+##### `Section 5) 스프링 MVC - 구조 이해`
+#### SpringMVC 구조
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/17cb0401-0848-4ffa-8228-980cbda7a92d"/></p> 
 
 </details>
