@@ -307,4 +307,23 @@
 #### SpringMVC 구조
 <p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/17cb0401-0848-4ffa-8228-980cbda7a92d"/></p> 
 
+#### 직접 만든 프레임워크 ➡️ 스프링 MVC 비교
+* `FrontController` ➡️ `DispatcherServlet`
+* `handlerMappingMap` ➡️ `handlerMapping`
+* `MyHandlerAdapter` ➡️ `HandlerAdapter`
+* `ModelView` ➡️ `ModelAndView`
+* `viewResolver(메서드)` ➡️ `ViewResolver(인터페이스)` 
+* `MyView(메서드)` ➡️ `View(인터페이스)` 
+
+#### 동작 순서
+   #### 1. `핸들러 조회` : 핸들러 매핑을 통해 요청 URL에 매핑된 핸들러(컨트롤러) 조회
+   #### 2. `핸들러 어댑터 조회` : 핸들러를 실행할 수 있는 핸들러 어댑터 조회
+   #### 3. `핸들러 어댑터 실행`
+   #### 4. `핸들러 실행` : 핸들러 어댑터가 실제 핸들러 실행
+   #### 5. `ModelAndView 반환` : 핸들러 어댑터에서 핸들러가 반환하는 정보를 ModelAndView로 변환하여 반환
+   #### 6. `viewResolver 호출` : 뷰 리졸버를 찾아 실행
+   #### 7. `View 반환` : 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체 반환
+   #### 8. `뷰 렌더링` : 뷰를 통해 뷰 렌더링
+   
+   
    </details>
