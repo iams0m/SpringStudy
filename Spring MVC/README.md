@@ -324,6 +324,21 @@
    #### 6. `viewResolver 호출` : 뷰 리졸버를 찾아 실행
    #### 7. `View 반환` : 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체 반환
    #### 8. `뷰 렌더링` : 뷰를 통해 뷰 렌더링
+
+#### ✔️ 핸들러 매핑과 핸들러 어댑터 
+* 스프링 부트가 자동 등록하는 핸들러 매핑과 핸들러 어댑터
+   * `HandlerMapping`
+      * 0 = RequestMappingHandlerMapping ➡️ 애노테이션 기반의 컨트롤러 `@RequestMapping`에서 사용
+      * 1 = BeanNameUrlHandlerMapping ➡️ 스프링 빈 이름으로 핸들러를 찾음 
+   * `HandlerAdapter`
+      * 0 = RequestMappingHandlerAdapter ➡️ 애노테이션 기반의 컨트롤러 `@RequestMapping`에서 사용
+      * 1 = HttpRequestHandlerAdapter ➡️ HttpRequestHandler 처리
+      * 2 = SimpleControllerHandlerAdapter ➡️ Controller 인터페이스 처리
    
-   
+   * `HandlerMapping`, `HandlerAdapter`을 순서대로 찾고 만약 없으면 다음 순서로 이동
+   #### 1. 핸들러 매핑으로 핸들러 조회 - `HandlerMapping`을 순서대로 실행하여 핸들러 찾기
+   #### 2. 핸들러 어댑터 조회 - `HandlerAdapter`의 `supports()`를 순서대로 호출
+   #### 3. 핸들러 어댑터 실행   
+
+#### ✔️ 뷰 리졸버   
    </details>
