@@ -334,11 +334,21 @@
       * 0 = RequestMappingHandlerAdapter ➡️ 애노테이션 기반의 컨트롤러 `@RequestMapping`에서 사용
       * 1 = HttpRequestHandlerAdapter ➡️ HttpRequestHandler 처리
       * 2 = SimpleControllerHandlerAdapter ➡️ Controller 인터페이스 처리
-   
-   * `HandlerMapping`, `HandlerAdapter`을 순서대로 찾고 만약 없으면 다음 순서로 이동
-   #### 1. 핸들러 매핑으로 핸들러 조회 - `HandlerMapping`을 순서대로 실행하여 핸들러 찾기
-   #### 2. 핸들러 어댑터 조회 - `HandlerAdapter`의 `supports()`를 순서대로 호출
-   #### 3. 핸들러 어댑터 실행   
+* 동작 방식
+   * `HandlerMapping`, `HandlerAdapter`를 순서대로 찾고 만약 없으면 다음 순서로 이동
+      #### 1. 핸들러 매핑으로 핸들러 조회 - `HandlerMapping`을 순서대로 실행하여 핸들러 찾기
+      #### 2. 핸들러 어댑터 조회 - `HandlerAdapter`의 `supports()`를 순서대로 호출
+      #### 3. 핸들러 어댑터 실행   
 
-#### ✔️ 뷰 리졸버   
+#### ✔️ 뷰 리졸버  
+* 스프링 부트 : `InternalResourceViewResolver` 라는 뷰 리졸버 자동 등록 ➡️ `application.properties`에 등록한 `spring.mvc.view.prefix`, `spring.mvc.view.suffix` 설정 정보 사용하여 등록
+* 스프링 부트가 자동 등록하는 뷰 리졸버
+   * 1 = BeanNameViewResolver ➡️ 빈 이름으로 뷰를 찾아서 반환
+   * 2 = InternalResourceViewResolver ➡️ JSP를 처리할 수 있는 뷰 반환
+* 동작 방식
+   * `InternalResourceViewResolver`를 호출하는 경우 
+      #### 1. 핸들러 어댑터 호출 - 핸들러 어댑터를 통해 논리 뷰 이름 획득
+      #### 2. ViewResolver 호출 - 논리 뷰 이름으로 ViewResolver 순서대로 호출 ➡️ `InternalResourceViewResolver` 호출  
+      #### 3. InternalResourceViewResolver - `InternalResourceView` 반환 (`forward()`를 사용하여 JSP 실행)
+      #### 4. view.render() 호출
    </details>
