@@ -11,10 +11,10 @@
 
 ### 🍃 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
 
-<details> 
-   <summary> 📑 정리 </summary>
+<details>
 
-##### `Section 1) 웹 애플리케이션 이해`
+**<summary> `Section 1) 웹 애플리케이션 이해` </summary>**
+   
 * `웹 서버 (Web Server)` : http 프로토콜로 서로 데이터를 주고 받을 수 있고, 정적 데이터 및 기타 부가 기능 제공
 * `웹 애플리케이션 서버 (WAS - Web Application Server)` : `웹 서버` 기능 + 프로그램 코드를 실행하여 애플리케이션 로직 수행
 * `웹 시스템 구성 - WEB, WAS, DB`
@@ -80,7 +80,12 @@
     * 주로 동적인 화면에 사용
     * 첫 로딩에서 빈 html 파일에 필요한 번들파일을 모두 다운로드 받음
 
-##### `Section 2) 서블릿` 
+</details>
+
+<details>
+   
+**<summary> `Section 2) 서블릿` </summary>**
+
 * 스프링 부트 서블릿 환경 구성
    * `@ServletComponentScan`
       * 서블릿 자동 등록
@@ -214,7 +219,12 @@
      * content-type : **application/json** (utf-8 형식을 사용하도록 정의되어 있음 ➡️ charset=utf-8 지원 ❌️)
      * `objectMapper.writeValueAsString()` : 객체 ➡️ JSON 문자
 
-##### `Section 3) MVC 패턴`
+</details>
+
+<details>
+
+**<summary> `Section 3) MVC 패턴` </summary>**
+
 * MVC 패턴 개요
      #### ✔️ 너무 많은 역할
      * 기존 방식
@@ -247,7 +257,12 @@
       * 프론트 컨트롤러 서블릿 하나로 클라이언트의 요청을 받아 요청에 맞는 컨트롤러를 찾아 추가로 컨트롤러 호출
       * 프론트 컨트롤러를 제외한 나머지 컨트롤러는 서블릿 사용하지 않아도 됨
 
-##### `Section 4) MVC 프레임워크 만들기` 
+</details>
+
+<details>
+
+**<summary> `Section 4) MVC 프레임워크 만들기` </summary>**
+
 #### 프론트 컨트롤러 도입 - V1
 * 모든 HTTP 요청을 받는 FrontController 클래스 생성 ➡️ 해당 클래스에서 URI를 통해 Controller의 매핑 정보 조회 ➡️ Controller 호출하여 로직 처리
 
@@ -302,28 +317,33 @@
    #### ✔️ 핸들러 어댑터
    * 인터페이스의 스펙이 다를 때, 중간에 스펙이 맞도록 변환하여 다양한 종류의 컨트롤러를 호출할 수 있도록 하는 객체
    * 컨트롤러가 반환한 뷰 이름을 ModelView로 만들어서 형식을 맞추어 반환
+
+</details>
+
+<details>
   
-##### `Section 5) 스프링 MVC - 구조 이해`
+**<summary> `Section 5) 스프링 MVC - 구조 이해` </summary>**
+
 #### SpringMVC 구조
 <p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/17cb0401-0848-4ffa-8228-980cbda7a92d"/></p> 
 
-#### 직접 만든 프레임워크 ➡️ 스프링 MVC 비교
-* `FrontController` ➡️ `DispatcherServlet`
-* `handlerMappingMap` ➡️ `handlerMapping`
-* `MyHandlerAdapter` ➡️ `HandlerAdapter`
-* `ModelView` ➡️ `ModelAndView`
-* `viewResolver(메서드)` ➡️ `ViewResolver(인터페이스)` 
-* `MyView(메서드)` ➡️ `View(인터페이스)` 
+* #### 직접 만든 프레임워크 ➡️ 스프링 MVC 비교
+   * `FrontController` ➡️ `DispatcherServlet`
+   * `handlerMappingMap` ➡️ `handlerMapping`
+   * `MyHandlerAdapter` ➡️ `HandlerAdapter`
+   * `ModelView` ➡️ `ModelAndView`
+   * `viewResolver(메서드)` ➡️ `ViewResolver(인터페이스)` 
+   * `MyView(메서드)` ➡️ `View(인터페이스)` 
 
-#### 동작 순서
-1. **`핸들러 조회`** : 핸들러 매핑을 통해 요청 URL에 매핑된 핸들러(컨트롤러) 조회
-2. **`핸들러 어댑터 조회`** : 핸들러를 실행할 수 있는 핸들러 어댑터 조회
-3. **`핸들러 어댑터 실행`**
-4. **`핸들러 실행`** : 핸들러 어댑터가 실제 핸들러 실행
-5. **`ModelAndView 반환`** : 핸들러 어댑터에서 핸들러가 반환하는 정보를 ModelAndView로 변환하여 반환
-6. **`viewResolver 호출`** : 뷰 리졸버를 찾아 실행
-7. **`View 반환`** : 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체 반환
-8. **`뷰 렌더링`** : 뷰를 통해 뷰 렌더링
+* #### 동작 순서
+   1. **`핸들러 조회`** : 핸들러 매핑을 통해 요청 URL에 매핑된 핸들러(컨트롤러) 조회
+   2. **`핸들러 어댑터 조회`** : 핸들러를 실행할 수 있는 핸들러 어댑터 조회
+   3. **`핸들러 어댑터 실행`**
+   4. **`핸들러 실행`** : 핸들러 어댑터가 실제 핸들러 실행
+   5. **`ModelAndView 반환`** : 핸들러 어댑터에서 핸들러가 반환하는 정보를 ModelAndView로 변환하여 반환
+   6. **`viewResolver 호출`** : 뷰 리졸버를 찾아 실행
+   7. **`View 반환`** : 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체 반환
+   8. **`뷰 렌더링`** : 뷰를 통해 뷰 렌더링
 
 
 #### ✔️ 핸들러 매핑과 핸들러 어댑터 
@@ -358,4 +378,15 @@
         * JSP : `forward()`를 통해 해당 JSP로 이동하여 렌더링
         * JSP를 제외한 나머지 뷰 템플릿 : `forward()` 과정 없이 바로 실제 뷰 렌더링
       #### 4. view.render() 호출
-   </details>
+
+#### 스프링 MVC - 시작하기
+* 기존 : 프레임워크에서 컨트롤러 사용 ➡️ 변경 : `@RequestMapping` 애노테이션 기반의 스프링 MVC 컨트롤러 사용
+
+#### ✔️ `@Controller`
+* 스프링이 자동으로 스프링 빈으로 등록 (➡️ 내부에 `@Component` 애노테이션이 있어서 **컴포넌트 스캔의 대상**이 됨)
+* 스프링 MVC에서 애노테이션 기반 컨트롤러로 인식 (➡️ `RequestMappingHandlerMapping`에서 사용)
+
+#### ✔️ `@RequestMapping`
+* 요청 정보 매핑
+* 해당 URL이 호출되면 이 메서드 호출
+</details>
