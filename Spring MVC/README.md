@@ -379,8 +379,9 @@
         * JSP를 제외한 나머지 뷰 템플릿 : `forward()` 과정 없이 바로 실제 뷰 렌더링
       #### 4. view.render() 호출
 
-#### 스프링 MVC - 시작하기
-* 기존 : 프레임워크에서 컨트롤러 사용 ➡️ 변경 : `@RequestMapping` 애노테이션 기반의 스프링 MVC 컨트롤러 사용
+
+**`1. 스프링 MVC - 시작하기`**
+* `@RequestMapping` 애노테이션 기반의 스프링 MVC 컨트롤러 사용
 
 #### ✔️ `@Controller`
 * 스프링이 자동으로 스프링 빈으로 등록 (➡️ 내부에 `@Component` 애노테이션이 있어서 **컴포넌트 스캔의 대상**이 됨)
@@ -389,4 +390,22 @@
 #### ✔️ `@RequestMapping`
 * 요청 정보 매핑
 * 해당 URL이 호출되면 이 메서드 호출
+
+
+**`2. 스프링 MVC - 컨트롤러 통합`**
+* 컨트롤러를 하나로 통합하면서 중복되는 `@RequestMapping`의 URL을 `메서드 레벨` ➡️ `클래스 레벨`로 변경
+   * `클래스 레벨`과 `메서드 레벨`을 조합하여 사용
+
+
+**`3. 스프링 MVC - 실용적인 방식`**
+   #### 기존 ➡️ 변경
+   * ModelAndView 직접 생성하여 반환 ➡️ ViewName 직접 반환
+   * `request.getParameter()` ➡️ `@RequestParam` 사용
+   * `@RequestMapping` ➡️ `@GetMapping`, `@PostMapping` 등으로 HTTP Method를 애노테이션으로 구분
+</details>
+
+<details>
+  
+**<summary> `Section 6) 스프링 MVC - 기본 기능` </summary>**
+
 </details>
