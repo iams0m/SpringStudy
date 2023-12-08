@@ -2,9 +2,9 @@
 #### 📣 [인프런] 김영한 님의 「스프링 MVC」 강의 실습 코드입니다.
 
 #### 개발 환경
-* `Java 11`
-* `SpringBoot v2.7.17`
-* `Dependencies` : Spring Web, Lombok
+* `Java 17`
+* `SpringBoot v3.2.0`
+* `Dependencies` : Spring Web, Lombok, Thymeleaf
 * `Test` : JUnit5
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
 * `Build` : Gradle ➡️ IntelliJ IDEA (자바 직접 실행으로 실행 속도 향상)
