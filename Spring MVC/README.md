@@ -407,5 +407,38 @@
 <details>
   
 **<summary> `Section 6) 스프링 MVC - 기본 기능` </summary>**
+#### 요청 매핑
+   * `@RestController`
+      * `@Controller` : 반환 값이 `String`이면 뷰를 찾고 뷰 렌더링
+      * `@RestController` : 반환 값으로 뷰를 찾는 것이 아닌 HTTP 메시지 바디에 바로 입력 ➡️ 실행 결과로 메시지 출력
 
+   * `@RequestMapping`
+      * URL 호출이 오면 메서드 실행되도록 매핑
+      * 속성을 배열로 제공 ➡️ 다중 설정 가능 (`{"/hello-basic", "hello-go"}`)
+
+      #### ✔️ HTTP 메서드
+      * `@RequestMapping`에 `method` 속성으로 HTTP 메서드를 지정하지 않으면, HTTP 메서드와 무관하게 호출
+         * GET, POST, PUT, PATCH, DELETE, HEAD 모두 허용
+    
+      #### ✔️ HTTP 메서드 매핑
+      * `method` : 특정 HTTP 메서드 요청만 허용
+      * 축약하여 사용 가능 (`method` + `@RequestMapping`) : `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`
+
+      #### ✔️ PathVariable(경로 변수) 사용
+      * 리소스 경로에 식별자 삽입 ➡️ 최근 HTTP API에서 선호하는 방식
+      * `@PathVariable`의 이름과 파라미터 이름이 같으면 생략 가능
+         * @PathVariable("userId") String userId ➡️ @PathVariable userId
+      * 다중 사용 가능
+    
+      #### ✔️ 특정 파라미터/헤더 조건 매핑
+      * 특정 파라미터/헤더가 있거나 없는 조건 추가
+
+      #### ✔️ 미디어 타입 조건 매핑
+      * HTTP 요청 Content-Type, consume
+         * HTTP 요청의 Content-Type 헤더를 기반으로 미디어 타입 매핑
+         * 타입이 맞지 않으면, `HTTP 415 상태코드(Unsupported Media Type)` 반환
+ 
+      * HTTP 요청 Accept, produce
+         * HTTP 요청의 Accept 헤더를 기반으로 미디어 타입 매핑
+         * 타입이 맞지 않으면, `HTTP 406 상태코드(Not Acceptable)` 반환
 </details>
