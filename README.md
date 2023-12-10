@@ -465,12 +465,12 @@
          * `no-cache` : 오류보다는 오래된 데이터라도 보여주자! ➡️ `200 OK`
          * `must-revalidate` : 항상 오류 발생 (⚠️ 중요한 정보를 사용할 경우, 예전 데이터를 보여준다면 큰 문제 발생) ➡️ `504 Gateway Timeout`
   </details>
-  
-#### 04. 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
-  <details> 
-   <summary> 📑 정리 </summary>
 
-##### `Section 1) 웹 애플리케이션 이해`
+#### 04. 🍃 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
+<details>
+
+**<summary> `Section 1) 웹 애플리케이션 이해` </summary>**
+   
 * `웹 서버 (Web Server)` : http 프로토콜로 서로 데이터를 주고 받을 수 있고, 정적 데이터 및 기타 부가 기능 제공
 * `웹 애플리케이션 서버 (WAS - Web Application Server)` : `웹 서버` 기능 + 프로그램 코드를 실행하여 애플리케이션 로직 수행
 * `웹 시스템 구성 - WEB, WAS, DB`
@@ -536,7 +536,12 @@
     * 주로 동적인 화면에 사용
     * 첫 로딩에서 빈 html 파일에 필요한 번들파일을 모두 다운로드 받음
 
-##### `Section 2) 서블릿` 
+</details>
+
+<details>
+   
+**<summary> `Section 2) 서블릿` </summary>**
+
 * 스프링 부트 서블릿 환경 구성
    * `@ServletComponentScan`
       * 서블릿 자동 등록
@@ -670,7 +675,12 @@
      * content-type : **application/json** (utf-8 형식을 사용하도록 정의되어 있음 ➡️ charset=utf-8 지원 ❌️)
      * `objectMapper.writeValueAsString()` : 객체 ➡️ JSON 문자
 
-##### `Section 3) MVC 패턴`
+</details>
+
+<details>
+
+**<summary> `Section 3) MVC 패턴` </summary>**
+
 * MVC 패턴 개요
      #### ✔️ 너무 많은 역할
      * 기존 방식
@@ -703,7 +713,12 @@
       * 프론트 컨트롤러 서블릿 하나로 클라이언트의 요청을 받아 요청에 맞는 컨트롤러를 찾아 추가로 컨트롤러 호출
       * 프론트 컨트롤러를 제외한 나머지 컨트롤러는 서블릿 사용하지 않아도 됨
 
-##### `Section 4) MVC 프레임워크 만들기` 
+</details>
+
+<details>
+
+**<summary> `Section 4) MVC 프레임워크 만들기` </summary>**
+
 #### 프론트 컨트롤러 도입 - V1
 * 모든 HTTP 요청을 받는 FrontController 클래스 생성 ➡️ 해당 클래스에서 URI를 통해 Controller의 매핑 정보 조회 ➡️ Controller 호출하여 로직 처리
 
@@ -758,9 +773,128 @@
    #### ✔️ 핸들러 어댑터
    * 인터페이스의 스펙이 다를 때, 중간에 스펙이 맞도록 변환하여 다양한 종류의 컨트롤러를 호출할 수 있도록 하는 객체
    * 컨트롤러가 반환한 뷰 이름을 ModelView로 만들어서 형식을 맞추어 반환
+
+</details>
+
+<details>
   
-##### `Section 5) 스프링 MVC - 구조 이해`
+**<summary> `Section 5) 스프링 MVC - 구조 이해` </summary>**
+
 #### SpringMVC 구조
 <p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/17cb0401-0848-4ffa-8228-980cbda7a92d"/></p> 
 
+* #### 직접 만든 프레임워크 ➡️ 스프링 MVC 비교
+   * `FrontController` ➡️ `DispatcherServlet`
+   * `handlerMappingMap` ➡️ `handlerMapping`
+   * `MyHandlerAdapter` ➡️ `HandlerAdapter`
+   * `ModelView` ➡️ `ModelAndView`
+   * `viewResolver(메서드)` ➡️ `ViewResolver(인터페이스)` 
+   * `MyView(메서드)` ➡️ `View(인터페이스)` 
+
+* #### 동작 순서
+   1. **`핸들러 조회`** : 핸들러 매핑을 통해 요청 URL에 매핑된 핸들러(컨트롤러) 조회
+   2. **`핸들러 어댑터 조회`** : 핸들러를 실행할 수 있는 핸들러 어댑터 조회
+   3. **`핸들러 어댑터 실행`**
+   4. **`핸들러 실행`** : 핸들러 어댑터가 실제 핸들러 실행
+   5. **`ModelAndView 반환`** : 핸들러 어댑터에서 핸들러가 반환하는 정보를 ModelAndView로 변환하여 반환
+   6. **`viewResolver 호출`** : 뷰 리졸버를 찾아 실행
+   7. **`View 반환`** : 뷰 리졸버는 뷰의 논리 이름을 물리 이름으로 바꾸고, 렌더링 역할을 담당하는 뷰 객체 반환
+   8. **`뷰 렌더링`** : 뷰를 통해 뷰 렌더링
+
+
+#### ✔️ 핸들러 매핑과 핸들러 어댑터 
+* 스프링 부트가 자동 등록하는 핸들러 매핑과 핸들러 어댑터
+   * `HandlerMapping`
+      * 0 = RequestMappingHandlerMapping ➡️ 애노테이션 기반의 컨트롤러 `@RequestMapping`에서 사용
+      * 1 = BeanNameUrlHandlerMapping ➡️ 스프링 빈 이름으로 핸들러를 찾음 
+   * `HandlerAdapter`
+      * 0 = RequestMappingHandlerAdapter ➡️ 애노테이션 기반의 컨트롤러 `@RequestMapping`에서 사용
+      * 1 = HttpRequestHandlerAdapter ➡️ HttpRequestHandler 처리
+      * 2 = SimpleControllerHandlerAdapter ➡️ Controller 인터페이스 처리
+
+* 동작 방식
+   * `HandlerMapping`, `HandlerAdapter`를 순서대로 찾고 만약 없으면 다음 순서로 이동
+      #### 1. 핸들러 매핑으로 핸들러 조회 - `HandlerMapping`을 순서대로 실행하여 핸들러 찾기
+      #### 2. 핸들러 어댑터 조회 - `HandlerAdapter`의 `supports()`를 순서대로 호출
+      #### 3. 핸들러 어댑터 실행   
+
+
+#### ✔️ 뷰 리졸버  
+* 스프링 부트 : `InternalResourceViewResolver` 라는 뷰 리졸버 자동 등록 ➡️ `application.properties`에 등록한 `spring.mvc.view.prefix`, `spring.mvc.view.suffix` 설정 정보 사용하여 등록
+
+* 스프링 부트가 자동 등록하는 뷰 리졸버
+   * 1 = BeanNameViewResolver ➡️ 빈 이름으로 뷰를 찾아서 반환
+   * 2 = InternalResourceViewResolver ➡️ JSP를 처리할 수 있는 뷰 반환
+
+* 동작 방식
+   * `InternalResourceViewResolver`를 호출하는 경우 
+      #### 1. 핸들러 어댑터 호출 - 핸들러 어댑터를 통해 논리 뷰 이름 획득
+      #### 2. ViewResolver 호출 - 논리 뷰 이름으로 ViewResolver 순서대로 호출 
+      #### 3. InternalResourceViewResolver 호출 - `InternalResourceView` 반환
+        * JSP : `forward()`를 통해 해당 JSP로 이동하여 렌더링
+        * JSP를 제외한 나머지 뷰 템플릿 : `forward()` 과정 없이 바로 실제 뷰 렌더링
+      #### 4. view.render() 호출
+
+
+**`1. 스프링 MVC - 시작하기`**
+* `@RequestMapping` 애노테이션 기반의 스프링 MVC 컨트롤러 사용
+
+#### ✔️ `@Controller`
+* 스프링이 자동으로 스프링 빈으로 등록 (➡️ 내부에 `@Component` 애노테이션이 있어서 **컴포넌트 스캔의 대상**이 됨)
+* 스프링 MVC에서 애노테이션 기반 컨트롤러로 인식 (➡️ `RequestMappingHandlerMapping`에서 사용)
+
+#### ✔️ `@RequestMapping`
+* 요청 정보 매핑
+* 해당 URL이 호출되면 이 메서드 호출
+
+
+**`2. 스프링 MVC - 컨트롤러 통합`**
+* 컨트롤러를 하나로 통합하면서 중복되는 `@RequestMapping`의 URL을 `메서드 레벨` ➡️ `클래스 레벨`로 변경
+   * `클래스 레벨`과 `메서드 레벨`을 조합하여 사용
+
+
+**`3. 스프링 MVC - 실용적인 방식`**
+   #### 기존 ➡️ 변경
+   * ModelAndView 직접 생성하여 반환 ➡️ ViewName 직접 반환
+   * `request.getParameter()` ➡️ `@RequestParam` 사용
+   * `@RequestMapping` ➡️ `@GetMapping`, `@PostMapping` 등으로 HTTP Method를 애노테이션으로 구분
+</details>
+
+<details>
+  
+**<summary> `Section 6) 스프링 MVC - 기본 기능` </summary>**
+#### 요청 매핑
+   * `@RestController`
+      * `@Controller` : 반환 값이 `String`이면 뷰를 찾고 뷰 렌더링
+      * `@RestController` : 반환 값으로 뷰를 찾는 것이 아닌 HTTP 메시지 바디에 바로 입력 ➡️ 실행 결과로 메시지 출력
+
+   * `@RequestMapping`
+      * URL 호출이 오면 메서드 실행되도록 매핑
+      * 속성을 배열로 제공 ➡️ 다중 설정 가능 (`{"/hello-basic", "hello-go"}`)
+
+      #### ✔️ HTTP 메서드
+      * `@RequestMapping`에 `method` 속성으로 HTTP 메서드를 지정하지 않으면, HTTP 메서드와 무관하게 호출
+         * GET, POST, PUT, PATCH, DELETE, HEAD 모두 허용
+    
+      #### ✔️ HTTP 메서드 매핑
+      * `method` : 특정 HTTP 메서드 요청만 허용
+      * 축약하여 사용 가능 (`method` + `@RequestMapping`) : `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`
+
+      #### ✔️ PathVariable(경로 변수) 사용
+      * 리소스 경로에 식별자 삽입 ➡️ 최근 HTTP API에서 선호하는 방식
+      * `@PathVariable`의 이름과 파라미터 이름이 같으면 생략 가능
+         * @PathVariable("userId") String userId ➡️ @PathVariable userId
+      * 다중 사용 가능
+    
+      #### ✔️ 특정 파라미터/헤더 조건 매핑
+      * 특정 파라미터/헤더가 있거나 없는 조건 추가
+
+      #### ✔️ 미디어 타입 조건 매핑
+      * HTTP 요청 Content-Type, consume
+         * HTTP 요청의 Content-Type 헤더를 기반으로 미디어 타입 매핑
+         * 타입이 맞지 않으면, `HTTP 415 상태코드(Unsupported Media Type)` 반환
+ 
+      * HTTP 요청 Accept, produce
+         * HTTP 요청의 Accept 헤더를 기반으로 미디어 타입 매핑
+         * 타입이 맞지 않으면, `HTTP 406 상태코드(Not Acceptable)` 반환
 </details>
