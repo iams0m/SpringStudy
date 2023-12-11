@@ -390,6 +390,8 @@
 #### ✔️ `@RequestMapping`
 * 요청 정보 매핑
 * 해당 URL이 호출되면 이 메서드 호출
+* 속성을 배열로 제공 ➡️ 다중 설정 가능 (`{"/hello-basic", "hello-go"}`)
+* 클래스 레벨에 매핑 정보를 두면, 메서드 레벨에서 해당 정보를 조합하여 사용
 
 
 **`2. 스프링 MVC - 컨트롤러 통합`**
@@ -410,16 +412,13 @@
 #### 요청 매핑
    * `@RestController`
       * `@Controller` : 반환 값이 `String`이면 뷰를 찾고 뷰 렌더링
-      * `@RestController` : 반환 값으로 뷰를 찾는 것이 아닌 HTTP 메시지 바디에 바로 입력 ➡️ 실행 결과로 메시지 출력
+      * `@RestController` : 반환 값으로 뷰를 찾는 것이 아닌 **HTTP 메시지 바디에 바로 입력** ➡️ **실행 결과로 메시지 출력**
 
-   * `@RequestMapping`
-      * URL 호출이 오면 메서드 실행되도록 매핑
-      * 속성을 배열로 제공 ➡️ 다중 설정 가능 (`{"/hello-basic", "hello-go"}`)
-
+   * 요청 매핑 방법
       #### ✔️ HTTP 메서드
       * `@RequestMapping`에 `method` 속성으로 HTTP 메서드를 지정하지 않으면, HTTP 메서드와 무관하게 호출
          * GET, POST, PUT, PATCH, DELETE, HEAD 모두 허용
-    
+   
       #### ✔️ HTTP 메서드 매핑
       * `method` : 특정 HTTP 메서드 요청만 허용
       * 축약하여 사용 가능 (`method` + `@RequestMapping`) : `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`
@@ -441,4 +440,15 @@
       * HTTP 요청 Accept, produce
          * HTTP 요청의 Accept 헤더를 기반으로 미디어 타입 매핑
          * 타입이 맞지 않으면, `HTTP 406 상태코드(Not Acceptable)` 반환
+       
+#### HTTP 헤더 정보 조회
+   * 컨트롤러의 사용 가능한 파라미터 목록 예시
+      * `HttpServletRequest`, `HttpServletResponse`
+      * `HttpMethod` : HTTP 메서드 조회
+      * `Locale` : Locale 정보 조회 
+      * `@RequestHeader MultiValueMap<String, String> headerMap` : 모든 HTTP 헤더를 MultiValueMap 형식으로 조회
+         * `MultiValueMap` : 하나의 키에 여러 값을 받을 때 사용
+      * `@RequestHeader("host") String host` : 특정 HTTP 헤더 조회    
+      * `@CookieValue(value = "myCookie", required = false) String cookie` : 특정 쿠키 조회
+      * 그 외 파라미터 목록은 [공식 메뉴얼](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html)에서 확인
 </details>
