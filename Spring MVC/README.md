@@ -442,7 +442,7 @@
          * 타입이 맞지 않으면, `HTTP 406 상태코드(Not Acceptable)` 반환
        
 #### HTTP 헤더 정보 조회
-   * 컨트롤러의 사용 가능한 파라미터 목록 예시
+   * 컨트롤러로 사용 가능한 파라미터 목록 예시
       * `HttpServletRequest`, `HttpServletResponse`
       * `HttpMethod` : HTTP 메서드 조회
       * `Locale` : Locale 정보 조회 
@@ -451,4 +451,6 @@
       * `@RequestHeader("host") String host` : 특정 HTTP 헤더 조회    
       * `@CookieValue(value = "myCookie", required = false) String cookie` : 특정 쿠키 조회
       * 그 외 파라미터 목록은 [공식 메뉴얼](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html)에서 확인
+    
+#### HTTP 요청 파라미터 - 쿼리 파라미터, HTML Form
 </details>
