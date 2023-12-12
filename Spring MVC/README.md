@@ -452,5 +452,29 @@
       * `@CookieValue(value = "myCookie", required = false) String cookie` : 특정 쿠키 조회
       * 그 외 파라미터 목록은 [공식 메뉴얼](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html)에서 확인
     
-#### HTTP 요청 파라미터 - 쿼리 파라미터, HTML Form
+#### HTTP 요청 파라미터 조회 방식
+#### ✔️ 쿼리 파라미터, HTML Form, HTTP message body
+   * GET - 쿼리 파라미터, POST - HTML Form
+      * `HttpServletRequest`의 `request.getParameter()`를 사용하여 요청 파라미터 조회
+   * HTTP message body에 직접 데이터를 담아 요청 
+
+#### ✔️ @RequestParam
+   * 파라미터 이름으로 바인딩
+   
+   * `@RequestParam`의 `name(value)` 속성을 파라미터 이름으로 사용
+   
+   * HTTP 파라미터 이름이 변수 이름과 같으면, `@RequestParam(name="xx")` 생략 가능 ➡️ String, int, Integer 등의 단순 타입이면 `@RequestParam`도 생략 가능
+   * `@RequestParam.required` : 파라미터 필수 여부 (기본값 ➡️ 파라미터 필수(true))
+   
+   * `@RequestParam.defaultValue` : 파라미터에 값이 없는 경우 기본 값 적용, 빈 문자의 경우에도 설정한 기본 값 적용
+   
+   * 파라미터 Map, MultiValueMap으로 조회하기
+      * `@RequestParam Map`
+         * `Map(key=value)`
+       
+      * `@RequestParam MultiValueMap`
+         * `MultiValueMap(key=[value1, value2, ...] ex) (key=userIds, value=[id1, id2])`    
+
+#### ✔️ @ModelAttribute
 </details>
+
