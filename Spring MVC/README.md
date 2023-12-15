@@ -494,5 +494,64 @@
    * argument resolver로 지정해둔 타입을 제외하고 **기본적으로 내가 만드는 클래스들은 `@ModelAttribute` 생략 가능**
 
 #### HTTP 요청 메시지
+* 요청 파라미터와 다르게 HTTP 메시지 바디를 통해 데이터가 직접 넘어오는 경우 `@RequestParam`, `@ModelAttribute` 사용 ❌️ (HTML Form 형식으로 전달되는 경우 제외)
+   #### ✔️ 단순 텍스트
+   * `Input/OutputSteam`
+     * `InputStream`(Reader) : HTTP 요청 메시지 바디의 내용을 직접 조회
+     * `OutputStream`(Writer) : HTTP 응답 메시지 바디에 결과 직접 출력 
+
+    ```java
+     @Slf4j
+     @Controller
+     public class RequestBodyStringController {
+          @PostMapping("/request-body-string")
+          public void requestBodyString(InputStream inputStream, Writer responseWriter) throws IOException {
+             String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+
+             log.info("messageBody={}", messageBody);
+             responseWriter.write("ok");
+     }
+    ```
+   
+   * `HttpEntity`
+     * HTTP header, body 정보를 편리하게 조회 (메시지 바디 정보 직접 조회)
+     * 응답에서도 사용 가능
+        * 메시지 바디 정보 직접 반환
+        * 헤더 정보 포함 가능
+        * view 조회 ❌️ (바로 바디의 데이터를 가지고 HTTP 응답 메시지에 넣어버림) 
+     * 스프링 MVC 내부에서 HTTP 메시지 바디를 읽어 문자나 객체로 변환하여 전달해주는 `HttpMessageConverter` 사용
+     * `HttpEntity`를 상속받은 다음 객체들도 동일 기능 제공
+        * `RequestEntity`(요청) : HttpMethod, url 정보 추가
+        * `ResponseEntity`(응답) : HTTP 상태 코드 설정 가능
+ 
+    ```java
+     @Slf4j
+     @Controller
+     public class RequestBodyStringController {
+          @PostMapping("/request-body-string")
+          public HttpEntity<String> requestBodyString(HttpEntity<String> httpEntity) throws IOException {
+             String messageBody = httpEntity.getBody();
+             log.info("messageBody={}", messageBody);
+
+             return new HttpEntity<>("ok");
+     }
+    ```
+   * `@RequestBody`
+      * HTTP 메시지 바디 정보를 편리하게 조회할 수 있는 애노테이션
+      * 실무에서 주로 사용하는 방식 
+
+    ```java
+     @Slf4j
+     @Controller
+     public class RequestBodyStringController {
+          @ResponseBody // 응답 결과를 HTTP 메시지 바디에 직접 담아서 전달할 수 있는 애노테이션
+          @PostMapping("/request-body-string")
+          public String requestBodyString(@RequestBody String messageBody) {
+             log.info("messageBody={}", messageBody);
+             return "ok";
+     }
+    ```
+
+   #### ✔️ JSON
 </details>
 
