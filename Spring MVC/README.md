@@ -553,5 +553,107 @@
     ```
 
    #### ✔️ JSON
+   * 문자로 된 JSON 데이터를 Jackson 라이브러리인 `objectMapper`를 사용해 자바 객체로 변환
+   * `Input/OutputSteam`
+      * `HttpServletRequest`를 사용하여 직접 HTTP 메시지 바디에서 데이터를 읽어와 문자로 변환
+      ```java
+      @Slf4j
+      @Controller
+      public class RequestBodyJsonController {
+
+          private ObjectMapper objectMapper = new ObjectMapper(); // JSON 데이터 ➡️ 자바 객체
+
+          @PostMapping("/request-body-json")
+          public void requestBodyJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
+             ServletInputStream inputStream = request.getInputStream();
+             String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+
+             log.info("messageBody={}", messageBody);
+             HelloData data = objectMapper.readValue(messageBody, HelloData.class);
+             log.info("username={}, age={}", data.getUsername(), data.getAge());
+
+             response.getWriter().write("ok");
+          }
+     }
+     ```
+   * `@RequestBody` 문자 변환
+      * HTTP 메시지에서 데이터를 꺼내고 messageBody에 저장
+      ```java
+      @Slf4j
+      @Controller
+      public class RequestBodyJsonController {
+
+          private ObjectMapper objectMapper = new ObjectMapper(); // JSON 데이터 ➡️ 자바 객체
+
+          @ResponseBody
+          @PostMapping("/request-body-json")
+          public String requestBodyJson(@RequestBody String messageBody) throws IOException {
+             HelloData data = objectMapper.readValue(messageBody, HelloData.class);
+             log.info("username={}, age={}", data.getUsername(), data.getAge());
+             return "ok";
+          }
+     }
+     ```
+   * `@RequestBody` 객체 변환
+      * `@RequestBody`에 직접 만든 객체 지정 (`@RequestBody HelloData data`) ➡️ HTTP 메시지 컨버터가 JSON을 객체로 변환해주어 `HelloData data = objectMapper.readValue(messageBody, HelloData.class);` 코드를 대신해줌 
+      ```java
+      @Slf4j
+      @Controller
+      public class RequestBodyJsonController {
+
+          private ObjectMapper objectMapper = new ObjectMapper(); // JSON 데이터 ➡️ 자바 객체
+
+          @ResponseBody
+          @PostMapping("/request-body-json")
+          public String requestBodyJson(@RequestBody HelloData data) { 
+             log.info("username={}, age={}", data.getUsername(), data.getAge());
+             return "ok";
+          }
+     }
+     ```
+     ⚠️ 주의
+      * `@RequestBody` 생략 불가능
+      * 생략시, `@ModelAttribute`가 적용되어 요청 파라미터 처리 (`HelloData data` ➡️ `@ModelAttribute HelloData data`)
+
+    * `@RequestBody` 객체 변환 - `@ResponseBody`로 응답
+       * `@ResponseBody` 사용으로 해당 객체를 HTTP 메시지 바디에 직접 넣어줄 수 있음
+      ```java
+      @Slf4j
+      @Controller
+      public class RequestBodyJsonController {
+
+          private ObjectMapper objectMapper = new ObjectMapper(); // JSON 데이터 ➡️ 자바 객체
+
+          @ResponseBody
+          @PostMapping("/request-body-json")
+          public HelloData requestBodyJson(@RequestBody HelloData data) { 
+             log.info("username={}, age={}", data.getUsername(), data.getAge());
+             return data;
+          }
+      }
+        ```
+       * `@RequestBody` 요청
+          * JSON 요청 ➡️ HTTP 메시지 컨버터 ➡️ 객체
+       * `@ResponseBody` 응답
+          * 객체 ➡️ HTTP 메시지 컨버터 ➡️ JSON 응답
+
+     * `HttpEntity`
+    ```java
+     @Slf4j
+     @Controller
+     public class RequestBodyJsonController {
+
+          private ObjectMapper objectMapper = new ObjectMapper(); // JSON 데이터 ➡️ 자바 객체
+
+          @ResponseBody
+          @PostMapping("/request-body-json")
+          public String requestBodyJson(HttpEntity<HelloData> httpEntity) { // helloData 제네릭으로 선언
+             HelloData data = httpEntity.getBody();
+             log.info("username={}, age={}", data.getUsername(), data.getAge());
+             return "ok";
+          }
+     }
+    ```
+
 </details>
 
