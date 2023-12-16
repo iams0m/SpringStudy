@@ -779,5 +779,27 @@
            * `@ResponseStatus` 애노테이션 사용 (동적으로 응답 코드 변경 ❌)
          
 #### HTTP 메시지 컨버터
+* 스프링 MVC에서 HTTP 메시지 컨버터를 적용하는 경우
+   * HTTP 요청 : `@RequestBody`, `HttpEntity(RequestEntity)`
+   * HTTP 응답 : `@ResponseBody`, `HttpEntity(ResponseEntity)`
+
+* HTTP 메시지 컨버터 인터페이스
+   * `canRead()`, `canWrite()` : 메시지 컨버터가 해당 클래스, 미디어 타입을 지원하는지 체크
+   * `read()`, `write()` : 메시지 컨버터를 통해 메시지를 읽고 쓰는 기능
+ 
+* 스프링 부트 기본 메시지 컨버터 (일부 생략)
+   * 0 = ByteArrayHttpMessageConverter ➡️ `byte[]` 데이터 처리
+      * 클래스 타입 : `byte[]`, 미디어 타입 : `*/*` 
+   * 1 = StringHttpMessageConverter ➡️ `String` 문자 데이터 처리
+      * 클래스 타입 : `String`, 미디어 타입 : `*/*` 
+   * 2 = MappingJackson2HttpMessageConverter
+      * 클래스 타입 : 객체 또는 `HashMap`, 미디어 타입 : `application/json` 관련
+    
+* **HTTP 요청 데이터 읽기**
+   * HTTP 요청 ➡️ `canRead()` 호출하여 메시지 컨버터가 메시지를 읽을 수 있는지 확인 (1. 대상 클래스 타입 지원 여부 2. HTTP 요청의 **Content-Type** 미디어 타입 지원 여부 체크) ➡️ `canRead()` 조건 만족시, `read()` 호출하여 객체 생성 후 반환
+* **HTTP 응답 데이터 생성**
+   * `canWrite()` 호출하여 메시지 컨버터가 메시지를 쓸 수 있는지 확인 (1. 대상 클래스 타입 지원 여부 2. HTTP 요청의 **Accept** 미디어 타입 지원 여부 체크) ➡️ `canWrite()` 조건 만족시, `write()` 호출하여 HTTP 응답 메시지 바디에 데이터 생성
+
+#### 🤔 그렇다면 HTTP 메시지 컨버터는 스프링 MVC 어디쯤에서 사용되는 걸까?
 </details>
 
