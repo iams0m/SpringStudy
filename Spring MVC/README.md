@@ -655,5 +655,46 @@
      }
     ```
 
+#### HTTP 응답
+   #### ✔️ 정적 리소스
+   * 웹 브라우저에 정적인 HTML, CSS, JS를 제공할 경우 사용
+   * 스프링 부트가 기본적으로 제공하는 경로 : `src/main/resources/static`
+   * 파일 변경 없이 그대로 서비스
+   #### ✔️ 뷰 템플릿
+   * 웹 브라우저에 동적인 HTML을 제공할 경우 사용
+   * 스프링 부트가 기본적으로 제공하는 경로 : `src/main/resources/templates`
+     ```java
+     @Controller
+     public class ResponseViewController {
+
+          @RequestMapping("/response-view-v1")
+          public ModelAndView responseViewV1() {
+             ModelAndView mav = new ModelAndView("response/hello").addObject("data", "hello!");
+             
+             return mav;
+          }
+
+          // String을 반환하는 경우
+          @RequestMapping("/response-view-v2")
+          public String responseViewV2(Model model) {
+             model.addAttribute("data", "hello!");             
+             return "response/hello";
+          }
+
+          // void를 반환하는 경우
+          @RequestMapping("/response/hello")
+          public void responseViewV3(Model model) {
+             model.addAttribute("data", "hello!");             
+          }
+     }
+     ```
+   * **String**을 반환하는 경우 - View or HTTP 메시지
+      * `@ResponseBody` ❌ : `response/hello`로 뷰 리졸버가 실행되어 뷰를 찾고 렌더링
+      * `@ResponseBody` ⭕ : 뷰 리졸버 실행 ❌ ➡️ HTTP 메시지 바디에 `response/hello` 출력
+   
+   * **void**를 반환하는 경우 (권장 ❌)
+      * `@Controller`를 사용하고 HTTP 메시지 바디를 처리하는 파라미터가 없으면, 요청 URL을 참고해서 논리 뷰 이름으로 사용
+   #### ✔️ HTTP 메시지 
+   * `@ResponseBody`, `HttpEntity`를 사용하면 뷰 템플릿이 아닌 HTTP 메시지 바디에 직접 응답 데이터 출력 가능
 </details>
 
