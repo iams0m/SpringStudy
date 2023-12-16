@@ -696,5 +696,88 @@
       * `@Controller`를 사용하고 HTTP 메시지 바디를 처리하는 파라미터가 없으면, 요청 URL을 참고해서 논리 뷰 이름으로 사용
    #### ✔️ HTTP 메시지 
    * `@ResponseBody`, `HttpEntity`를 사용하면 뷰 템플릿이 아닌 HTTP 메시지 바디에 직접 응답 데이터 출력 가능
+   * `responseBodyV1`
+     ```java
+     @Slf4j
+     @@RestController
+     public class ResponseBodyController {
+
+          @GetMapping("/response-body-string-v1")
+          public void responseBodyV1(HttpServletResponse response) throws IOException {
+             response.getWriter().write("ok");
+          } 
+     }
+     ```
+        * `HttpServletResponse` 객체를 통해 HTTP 메시지 바디에 직접 응답 메시지 전달
+
+   * `responseBodyV2`
+     ```java
+     @Slf4j
+     @@RestController // @ResponseBody + @Controller
+     public class ResponseBodyController {
+
+          // HttpEntity, ResponseEntity(Http Status) 추가
+          @GetMapping("/response-body-string-v2")
+          public ResponseEntity<String> responseBodyV2() {
+             return new ResponseEntity<>("ok", HttpStatus.OK);
+          } 
+     }
+     ```
+        * `HttpEntity`를 상속 받은 `ResponseEntity`를 사용하여 **HTTP 메시지 바디에 응답 메시지 전달 ➕ HTTP 응답 코드 설정**
+
+   * `responseBodyV3`
+     ```java
+     @Slf4j
+     @@RestController
+     public class ResponseBodyController {
+
+          // @ResponseBody
+          @GetMapping("/response-body-string-v3")
+          public String responseBodyV3() {
+             return "ok";
+          } 
+     }
+     ```
+        * `@ResponseBody` 사용하여 HTTP 메시지 컨버터를 통해 HTTP 메시지 바디에 응답 메시지 전달
+
+   * `responseBodyJsonV1`
+     ```java
+     @Slf4j
+     @@RestController
+     public class ResponseBodyController {
+
+          @GetMapping("/response-body-json-v1")
+          public ResponseEntity<HelloData> responseBodyJsonV1() {
+             HelloData helloData = new HelloData();
+             helloData.setUsername("userA");
+             helloData.setAge(20);
+             return new ResponseEntity<>(helloData, HttpStatus.OK);
+          } 
+     }
+     ```
+        * `ResponseEntity` 사용하여 HTTP 메시지 컨버터를 통해 JSON 형식으로 변환되어 반환
+           * 동적으로 응답 코드 변경 ⭕
+
+   * `responseBodyJsonV2`
+     ```java
+     @Slf4j
+     @@RestController
+     public class ResponseBodyController {
+
+          @ResponseStatus(HttpStatus.OK)
+          // @ResponseBody
+          @GetMapping("/response-body-json-v2")
+          public HelloData responseBodyJsonV2() {
+             HelloData helloData = new HelloData();
+             helloData.setUsername("userA");
+             helloData.setAge(20);
+             return helloData;
+          } 
+     }
+     ```
+        * `@ResponseBody` 사용하여 HTTP 메시지 컨버터를 통해 HTTP 메시지 바디에 응답 메시지 전달 ➡️ HTTP 응답 코드 설정 불가능
+           * `@ResponseStatus` 애노테이션 사용 (동적으로 응답 코드 변경 ❌)
+         
+#### HTTP 메시지 컨버터
 </details>
 
