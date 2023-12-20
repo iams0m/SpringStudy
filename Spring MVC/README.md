@@ -820,6 +820,38 @@
 <details>
 
 **<summary> `Section 7) 스프링 MVC - 웹 페이지 만들기` </summary>**
+#### Thymeleaf
+* `서버 사이드 HTML 렌더링 (SSR)` : 백엔드 서버에서 HTML을 동적으로 렌더링
+* `네츄럴 템플릿` : HTML을 유지하여 웹 브라우저에서 파일을 직접 열어도 내용을 확인할 수 있고, 서버를 통해 뷰 템플릿을 거쳐 동적으로 변경된 결과도 확인 가능
+* `스프링 통합 지원` : 스프링과 통합되어 있어 스프링의 다양한 기능 편리하게 사용 가능 (➡️ **Spring 진영에서 공식적으로 Thymeleaf 사용 권장 !**)
+* 기본 기능
+   * `타임리프 태그 속성`
+      * 주로 HTML 태그에 `th:*` 속성을 지정하는 방식으로 동작
+      * `th:*`로 속성을 적용하면 서버사이드에서 렌더링 되고, 기존 HTML 속성 대체
+      * `th:*`이 없으면 기존 HTML 속성 그대로 사용
+   
+   * `URL 링크 표현식`
+      * 타임리프에서 URL을 생성할 때 `@{...}` 문법 사용
+      * 경로를 템플릿처럼 편리하게 사용 가능
+      * 경로 변수 뿐만 아니라 쿼리 파라미터도 생성
+         * `th:href="@{/basic/items/{itemId}(itemId=${item.id}, query='test')}"`
+   
+   * `리터럴`
+      * 문법 : `|...|`
+      * 타임리프에서 문자와 표현식 등은 분리되어 있기 때문에 더해서 사용해야 함
+         * `<span th:text="'Welcome to our application, ' + ${user.name} + '!'">`
+      * 리터럴 문법을 사용하면, 더하기 없이 편리하게 사용 가능
+         * `<span th:text="|Welcome to our application, ${user.name}!|">`     
 
+   * `반복 출력` - `th:each`
+      * `<tr th:each="item : ${items}">` : 모델에 포함된 `items` 컬렉션 데이터가 `item` 변수에 하나씩 포함되고, 반복문 안에서 `item` 변수 사용 가능
+         * List뿐만 아니라 배열, `java.util.Iterable`, `java.util.Enumeration`을 구현한 모든 객체 반복문 사용 가능
+         * 컬렉션 수만큼 `<tr>..</tr>`이 하위 태그를 포함하여 생성됨
+
+   * `변수 표현` - `${...}`
+      * `<td th:text="${item.price}">10000</td>` : 모델에 포함된 값이나, 타임리프 변수로 선언한 값 조회 가능하며 프로퍼티 접근법 사용
+    
+   * `내용 변경` - `th:text`
+      * `<td th:text="${item.price}">10000</td>` : 내용 값 (10000) ➡️ `th:text` 값 (`${item.price}`)
 </details>
 
