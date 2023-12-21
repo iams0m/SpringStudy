@@ -899,6 +899,30 @@ public String addItem(@ModelAttribute("item") Item item, Model model) {
 * PRG (Post/Redirect/Get)
    * 상품 저장 후, 뷰 템플릿으로 이동하는 것이 아닌 상품 상세 화면으로 리다이렉트 호출 ➡️ 마지막에 호출한 내용이 상품 상세 화면인 `GET /items/{id}`로 변경되어 새로 고침 문제 해결
 
+#### 🫢 만약 여기서 고객이 저장이 잘 된 건지 확인할 수 있도록 저장이 잘 되었으면 상품 상세 화면에 "저장 완료"라는 메시지를 보여달라는 요구사항이 들어왔다면 어떻게 해결할 것인가?
+##### 1. `RedirectAttributes`
+   ```java
+   @PostMapping("/add")
+   public String addItem(Item item, RedirectAttributes redirectAttributes) {
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/basic/items/{itemId}";
+   }
+   ```
+   
+   * `redirect:/basic/items/{itemId}`
+      * `pathVariable` 바인딩 : `{itemId}`
+      * 나머지는 쿼리 파라미터로 처리 : `?status=true`
+
+##### 2. 뷰 템플릿 메시지 추가
+```java
+   <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
+```
+
+* `th:if` : 해당 조건이 참이면 실행
+* `${param.status}` : 타임리프에서 쿼리 파라미터를 편리하게 조회하는 기능  
+
 #### 상품 수정 처리
 * 상품 등록과 마찬가지로 **리다이렉트** 호출 
 
