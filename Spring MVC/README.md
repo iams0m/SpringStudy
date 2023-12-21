@@ -889,5 +889,22 @@ public String addItemV2(@ModelAttribute("item") Item item, Model model) {
 
    #### ✔️`@ModelAttribute` 전체 생략 가능
    * 생략시, 대상 객체 모델에 자동 등록
+ 
+#### 상품 수정 처리
+* 마지막에 뷰 템플릿을 호출하는 대신, 상품 상세 화면으로 이동하도록 **리다이렉트** 호출 
+
+```java
+@PostMapping("/{itemId}/edit")
+public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+     itemRepository.update(itemId, item);
+     return "redirect:/basic/items/{itemId}";
+}
+```
+
+   * 리다이렉트
+      * `redirect:/...` : 스프링은 편리하게 리다이렉트를 지원함
+      * `redirect:/basic/items/{itemId}` : `redirect`에서 컨트롤러에 매핑된 `@PathVariable` 값 사용 가능
+
+#### PRG (Post/Redirect/Get)
 </details>
 
