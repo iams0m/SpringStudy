@@ -870,10 +870,10 @@
 
 ```java
 @PostMapping("/add")
-public String addItemV2(@ModelAttribute("item") Item item, Model model) {
+public String addItem(@ModelAttribute("item") Item item, Model model) {
      itemRepository.save(item);
      //model.addAttribute("item", item); // 자동 추가, 생략 가능
-     return "basic/item";
+     return "redirect:/basic/items/" + item.getId();
 }
 ```
 
@@ -889,9 +889,18 @@ public String addItemV2(@ModelAttribute("item") Item item, Model model) {
 
    #### ✔️`@ModelAttribute` 전체 생략 가능
    * 생략시, 대상 객체 모델에 자동 등록
- 
+
+* 마지막에 뷰 템플릿을 호출하는 대신, 상품 상세 화면으로 이동하도록 **리다이렉트** 호출
+#### ⚠️ 리다이렉트를 하지 않으면, 등록 화면에서 새로 고침시 중복 등록
+   * 웹 브라우저의 새로 고침 : 마지막으로 서버에 전송한 데이터 다시 전송
+   * 상품 등록 폼에서 데이터를 입력하고 저장하면, **`POST /add` + 상품 데이터**를 서버로 전송 ➡️ 이 상태에서 새로 고침을 하면, 마지막에 전송한 **`POST /add` + 상품 데이터**를 서버로 다시 전송 (중복 등록 발생 !)
+
+#### 🤔 그렇다면 이 문제를 어떻게 해결할 수 있을까?
+* PRG (Post/Redirect/Get)
+   * 상품 저장 후, 뷰 템플릿으로 이동하는 것이 아닌 상품 상세 화면으로 리다이렉트 호출 ➡️ 마지막에 호출한 내용이 상품 상세 화면인 `GET /items/{id}`로 변경되어 새로 고침 문제 해결
+
 #### 상품 수정 처리
-* 마지막에 뷰 템플릿을 호출하는 대신, 상품 상세 화면으로 이동하도록 **리다이렉트** 호출 
+* 상품 등록과 마찬가지로 **리다이렉트** 호출 
 
 ```java
 @PostMapping("/{itemId}/edit")
@@ -901,10 +910,7 @@ public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
 }
 ```
 
-   * 리다이렉트
-      * `redirect:/...` : 스프링은 편리하게 리다이렉트를 지원함
-      * `redirect:/basic/items/{itemId}` : `redirect`에서 컨트롤러에 매핑된 `@PathVariable` 값 사용 가능
+* `redirect:/basic/items/{itemId}` : `redirect`에서 컨트롤러에 매핑된 `@PathVariable` 값 사용 가능
 
-#### PRG (Post/Redirect/Get)
 </details>
 
