@@ -854,8 +854,13 @@
    * `내용 변경` - `th:text`
       * 태그 안의 텍스트를 서버에서 전달 받은 값에 따라 표현하고자 할 때 사용
     
-   * `속성 변경` - `th:value`
-      * 사용자의 입력이 필요한 요소의 value값 설정 (`input`, `checkboxes`, `radio buttons`, `dropdowns` 등)
+   * `속성 변경`
+      * `th:value` 
+         * 사용자의 입력이 필요한 요소의 value값 설정 (`input`, `checkboxes`, `radio buttons`, `dropdowns` 등)
+      * `th:action`
+         * HTML form에서 `action`에 값이 없으면, 현재 URL에 데이터 전송 ➡️ 하나의 URL을 사용하여 HTTP 메서드로 기능 구분 가능
+            * 상품 등록 폼 : GET `/basic/items/add`
+            * 상품 등록 처리 : POST `/basic/items/add`   
 
 </details>
 
