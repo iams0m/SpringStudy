@@ -852,6 +852,10 @@
       * `<td th:text="${item.price}">10000</td>` : 모델에 포함된 값이나, 타임리프 변수로 선언한 값 조회 가능하며 프로퍼티 접근법 사용
     
    * `내용 변경` - `th:text`
-      * `<td th:text="${item.price}">10000</td>` : 내용 값 (10000) ➡️ `th:text` 값 (`${item.price}`)
+      * 태그 안의 텍스트를 서버에서 전달 받은 값에 따라 표현하고자 할 때 사용
+    
+   * `속성 변경` - `th:value`
+      * 사용자의 입력이 필요한 요소의 value값 설정 (`input`, `checkboxes`, `radio buttons`, `dropdowns` 등)
+
 </details>
 
