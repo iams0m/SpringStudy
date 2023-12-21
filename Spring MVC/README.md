@@ -862,5 +862,32 @@
             * 상품 등록 폼 : GET `/basic/items/add`
             * 상품 등록 처리 : POST `/basic/items/add`   
 
+#### 상품 등록 처리 - `@ModelAttribute`
+* 상품 등록 폼은 다음 방식으로 서버에 데이터 전달
+   * **POST - HTML Form**
+      * `content-type: application/x-www-form-urlencoded`
+      * 메시지 바디에 쿼리 파라미터 형식으로 전달
+
+```java
+@PostMapping("/add")
+public String addItemV2(@ModelAttribute("item") Item item, Model model) {
+     itemRepository.save(item);
+     //model.addAttribute("item", item); // 자동 추가, 생략 가능
+     return "basic/item";
+}
+```
+
+* `@ModelAttribute` 특징
+   #### ✔️요청 파라미터 처리
+   * `Item` 객체를 생성하고, 요청 파라미터의 값을 프로퍼티 접근법(setXxx)으로 입력
+
+   #### ✔️Model 추가
+   * 모델에 `@ModelAttribute`로 지정한 객체 자동 추가 (➡️ `model.addAttribute("item", item)` 생략 가능)
+
+   #### ✔️`@ModelAttribute name` 생략 가능
+   * 생략시, model에 저장되는 name : 클래스명 첫글자를 소문자로 변경하여 등록 (`Item` ➡️ `item`)
+
+   #### ✔️`@ModelAttribute` 전체 생략 가능
+   * 생략시, 대상 객체 모델에 자동 등록
 </details>
 
