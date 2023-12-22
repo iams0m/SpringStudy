@@ -1255,6 +1255,20 @@
    * `canWrite()` 호출하여 메시지 컨버터가 메시지를 쓸 수 있는지 확인 (1. 대상 클래스 타입 지원 여부 2. HTTP 요청의 **Accept** 미디어 타입 지원 여부 체크) ➡️ `canWrite()` 조건 만족시, `write()` 호출하여 HTTP 응답 메시지 바디에 데이터 생성
 
 #### 🤔 그렇다면 HTTP 메시지 컨버터는 스프링 MVC 어디쯤에서 사용되는 걸까?
+* `@RequestMapping`을 처리하는 `@RequestMappingHandlerAdapder`
+   #### [RequestMappingHandlerAdapter 동작 방식]
+<p align="center"><img width="60%" src="https://github.com/iams0m/SpringStudy/assets/105639531/a46f022e-00c3-4059-b8e6-4c8ca79e8c7a"/></p>
+   
+   * `ArgumentResolver`
+      * **HTTP 메시지 컨버터를 사용하여** 핸들러(컨트롤러)가 필요로 하는 다양한 파라미터의 값(객체) 생성 ➡️ 컨트롤러를 호출하여 값을 넘겨줌
+      * 스프링에서 기본적으로 제공하는 `ArgumentResolver` : `HttpServletRequest`, `Model`, `@RequestParam`, `@ModelAttribute`, `@RequestBody`, `HttpEntity` 등 (➡️ 유연한 파라미터 처리 가능)
+      * 동작 방식
+         * `ArgumentResolver`의 `supportsParameter()`를 호출하여 해당 파라미터 지원 여부 체크 ➡️ 지원하면,`resolveArgument`를 호출하여 실제 객체 생성 ➡️ 컨트롤러 호출시, 생성된 객체 넘겨줌
+       
+   * `ReturnValueHandler`
+      * **HTTP 메시지 컨버터를 호출하여** 응답 결과 생성
+      * 스프링에서 기본적으로 제공하는 `ReturnValueHandler` : `ModelAndView`, `@ResponseBody`, `HttpEntity`, `String` 등
+
 </details>
 
 <details>
