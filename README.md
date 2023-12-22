@@ -1256,3 +1256,124 @@
 
 #### 🤔 그렇다면 HTTP 메시지 컨버터는 스프링 MVC 어디쯤에서 사용되는 걸까?
 </details>
+
+<details>
+
+**<summary> `Section 7) 스프링 MVC - 웹 페이지 만들기` </summary>**
+#### Thymeleaf
+* `서버 사이드 HTML 렌더링 (SSR)` : 백엔드 서버에서 HTML을 동적으로 렌더링
+* `네츄럴 템플릿` : HTML을 유지하여 웹 브라우저에서 파일을 직접 열어도 내용을 확인할 수 있고, 서버를 통해 뷰 템플릿을 거쳐 동적으로 변경된 결과도 확인 가능
+* `스프링 통합 지원` : 스프링과 통합되어 있어 스프링의 다양한 기능 편리하게 사용 가능 (➡️ **Spring 진영에서 공식적으로 Thymeleaf 사용 권장 !**)
+* 기본 기능
+   * `타임리프 태그 속성`
+      * 주로 HTML 태그에 `th:*` 속성을 지정하는 방식으로 동작
+      * `th:*`로 속성을 적용하면 서버사이드에서 렌더링 되고, 기존 HTML 속성 대체
+      * `th:*`이 없으면 기존 HTML 속성 그대로 사용
+   
+   * `URL 링크 표현식`
+      * 타임리프에서 URL을 생성할 때 `@{...}` 문법 사용
+      * 경로를 템플릿처럼 편리하게 사용 가능
+      * 경로 변수 뿐만 아니라 쿼리 파라미터도 생성
+         * `th:href="@{/basic/items/{itemId}(itemId=${item.id}, query='test')}"`
+   
+   * `리터럴`
+      * 문법 : `|...|`
+      * 타임리프에서 문자와 표현식 등은 분리되어 있기 때문에 더해서 사용해야 함
+         * `<span th:text="'Welcome to our application, ' + ${user.name} + '!'">`
+      * 리터럴 문법을 사용하면, 더하기 없이 편리하게 사용 가능
+         * `<span th:text="|Welcome to our application, ${user.name}!|">`     
+
+   * `반복 출력` - `th:each`
+      * `<tr th:each="item : ${items}">` : 모델에 포함된 `items` 컬렉션 데이터가 `item` 변수에 하나씩 포함되고, 반복문 안에서 `item` 변수 사용 가능
+         * List뿐만 아니라 배열, `java.util.Iterable`, `java.util.Enumeration`을 구현한 모든 객체 반복문 사용 가능
+         * 컬렉션 수만큼 `<tr>..</tr>`이 하위 태그를 포함하여 생성됨
+
+   * `변수 표현` - `${...}`
+      * `<td th:text="${item.price}">10000</td>` : 모델에 포함된 값이나, 타임리프 변수로 선언한 값 조회 가능하며 프로퍼티 접근법 사용
+    
+   * `내용 변경` - `th:text`
+      * 태그 안의 텍스트를 서버에서 전달 받은 값에 따라 표현하고자 할 때 사용
+    
+   * `속성 변경`
+      * `th:value` 
+         * 사용자의 입력이 필요한 요소의 value값 설정 (`input`, `checkboxes`, `radio buttons`, `dropdowns` 등)
+      * `th:action`
+         * HTML form에서 `action`에 값이 없으면, 현재 URL에 데이터 전송 ➡️ 하나의 URL을 사용하여 HTTP 메서드로 기능 구분 가능
+            * 상품 등록 폼 : GET `/basic/items/add`
+            * 상품 등록 처리 : POST `/basic/items/add`   
+
+#### 상품 등록 처리 - `@ModelAttribute`
+* 상품 등록 폼은 다음 방식으로 서버에 데이터 전달
+   * **POST - HTML Form**
+      * `content-type: application/x-www-form-urlencoded`
+      * 메시지 바디에 쿼리 파라미터 형식으로 전달
+
+```java
+@PostMapping("/add")
+public String addItem(@ModelAttribute("item") Item item, Model model) {
+     itemRepository.save(item);
+     //model.addAttribute("item", item); // 자동 추가, 생략 가능
+     return "redirect:/basic/items/" + item.getId();
+}
+```
+
+* `@ModelAttribute` 특징
+   #### ✔️요청 파라미터 처리
+   * `Item` 객체를 생성하고, 요청 파라미터의 값을 프로퍼티 접근법(setXxx)으로 입력
+
+   #### ✔️Model 추가
+   * 모델에 `@ModelAttribute`로 지정한 객체 자동 추가 (➡️ `model.addAttribute("item", item)` 생략 가능)
+
+   #### ✔️`@ModelAttribute name` 생략 가능
+   * 생략시, model에 저장되는 name : 클래스명 첫글자를 소문자로 변경하여 등록 (`Item` ➡️ `item`)
+
+   #### ✔️`@ModelAttribute` 전체 생략 가능
+   * 생략시, 대상 객체 모델에 자동 등록
+
+* 마지막에 뷰 템플릿을 호출하는 대신, 상품 상세 화면으로 이동하도록 **리다이렉트** 호출
+#### ⚠️ 리다이렉트를 하지 않으면, 등록 화면에서 새로 고침시 중복 등록
+   * 웹 브라우저의 새로 고침 : 마지막으로 서버에 전송한 데이터 다시 전송
+   * 상품 등록 폼에서 데이터를 입력하고 저장하면, **`POST /add` + 상품 데이터**를 서버로 전송 ➡️ 이 상태에서 새로 고침을 하면, 마지막에 전송한 **`POST /add` + 상품 데이터**를 서버로 다시 전송 (중복 등록 발생 !)
+
+#### 🤔 그렇다면 이 문제를 어떻게 해결할 수 있을까?
+* PRG (Post/Redirect/Get)
+   * 상품 저장 후, 뷰 템플릿으로 이동하는 것이 아닌 상품 상세 화면으로 리다이렉트 호출 ➡️ 마지막에 호출한 내용이 상품 상세 화면인 `GET /items/{id}`로 변경되어 새로 고침 문제 해결
+
+#### 🫢 만약 여기서 고객이 저장이 잘 된 건지 확인할 수 있도록 저장이 잘 되었으면 상품 상세 화면에 "저장 완료"라는 메시지를 보여달라는 요구사항이 들어왔다면 어떻게 해결할 것인가?
+##### 1. `RedirectAttributes`
+   ```java
+   @PostMapping("/add")
+   public String addItem(Item item, RedirectAttributes redirectAttributes) {
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/basic/items/{itemId}";
+   }
+   ```
+   
+   * `redirect:/basic/items/{itemId}`
+      * `pathVariable` 바인딩 : `{itemId}`
+      * 나머지는 쿼리 파라미터로 처리 : `?status=true`
+
+##### 2. 뷰 템플릿 메시지 추가
+```java
+   <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
+```
+
+* `th:if` : 해당 조건이 참이면 실행
+* `${param.status}` : 타임리프에서 쿼리 파라미터를 편리하게 조회하는 기능  
+
+#### 상품 수정 처리
+* 상품 등록과 마찬가지로 **리다이렉트** 호출 
+
+```java
+@PostMapping("/{itemId}/edit")
+public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+     itemRepository.update(itemId, item);
+     return "redirect:/basic/items/{itemId}";
+}
+```
+
+* `redirect:/basic/items/{itemId}` : `redirect`에서 컨트롤러에 매핑된 `@PathVariable` 값 사용 가능
+
+</details>
