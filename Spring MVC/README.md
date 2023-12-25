@@ -1,5 +1,5 @@
 # Spring-MVC
-### 🍃 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
+
 #### 📣 [인프런] 김영한 님의 「스프링 MVC1편 - 백엔드 웹 개발 핵심 기술」 강의 실습 코드입니다.
 
 #### 개발 환경
@@ -9,6 +9,8 @@
 * `Test` : JUnit5
 * `IDE` : IntelliJ IDEA Ultimate 2023.2
 * `Build` : Gradle ➡️ IntelliJ IDEA (자바 직접 실행으로 실행 속도 향상)
+
+### 🍃 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
 
 <details>
 
