@@ -49,4 +49,34 @@
   #### 👉 Escape를 기본으로 하고, 꼭 필요할 때만 UnEscape를 사용하자!
 
 * 변수 - SpringEL
+  * 타임리프에서 변수를 사용할 때 : 변수 표현식(`${...}`) ➕ 스프링이 제공하는 표현식(SpringEL) 사용
+
+  #### SpringEL 다양한 표현식 사용
+  ##### ✔️ Object
+  * `user.username` : `user`의 `username`에 프로퍼티 접근 (`user.getUsername()`)
+  * `user['username`]` : 위와 동일
+  * `user.getUsername()` : `user`의 `getUsername()` 직접 호출
+
+  ##### ✔️ List
+  * `users[0].username` : List에서 첫번째 회원을 찾고, `username`에 프로퍼티 접근 (`list.get(0).getUsername()`)
+  * `users[0]['username']` : 위와 동일
+  * `users[0].getUsername()` : List에서 첫번째 회원을 찾고 `getUsername()` 직접 호출
+
+  ##### ✔️ Map
+  * `userMap['userA']` : Map에서 userA를 찾고, `username`에 프로퍼티 접근 (`map.get("userA").getUsername()`)
+  * `userMap['userA']['username']` : 위와 동일
+  * `userMap['userA'].getUsername()` :  Map에서 userA를 찾고, `getUsername()` 직접 호출
+ 
+  #### 지역 변수
+  * `th:with`
+  * 선언한 태그 안에서만 사용 가능
+  ```html
+  <h1>지역 변수 - (th:with)</h1>
+  <div th:with="first=${users[0]}">
+   <p>처음 사람의 이름은 <span th:text="${first.username}"></span></p>
+  </div>
+  ```
+    * List에서 첫번째 회원을 찾아 `first`에 담아두고 `username`에 프로퍼티 접근 ➡️ 결과 : 처음 사람의 이름 출력
+
+* 기본 객체들
 </details>
