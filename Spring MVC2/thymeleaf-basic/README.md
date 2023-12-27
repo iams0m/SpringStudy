@@ -78,5 +78,41 @@
   ```
     * List에서 첫번째 회원을 찾아 `first`에 담아두고 `username`에 프로퍼티 접근 ➡️ 결과 : 처음 사람의 이름 출력
 
-* 기본 객체들
+* 기본 객체
+  * 타임리프에서 제공하는 기본 객체
+  * `#` 기호로 시작
+    * `#ctx`
+    * `#vars`
+    * `#locale`
+  * 편의 객체도 제공
+    * HTTP 요청 파라미터 접근 : param
+      * 예) `${param.paramData}` 
+    * HTTP 세션 접근 : session
+      * 예) `${session.sessionData}` 
+    * 스프링 빈 접근 : @
+      * 예) `${@helloBean.hello('Spring!')}` 
+
+* 유틸리티 객체와 날짜
+  * 유틸리티 객체 : 문자, 숫자, 날짜, URI 등을 편리하게 다루는 객체
+    * [타임리프 유틸리티 객체 목록](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#expression-utility-objects)  
+
+* URL 링크
+  * `@{...}`
+  ##### ✔️ 단순한 URL
+  * `@{/hello}` ➡️ `/hello` 
+
+  ##### ✔️ 쿼리 파라미터
+  * `@{/hello(param1=${param1}, param2=${param2})}` ➡️ `/hello?param1=data1&param2=data2`
+  * () : 쿼리 파라미터로 처리
+
+  ##### ✔️ 경로 변수
+  * `@{/hello/{param1}/{param2}(param1=${param1}, param2=${param2})}` ➡️ `/hello/data1/data2`
+  * URL 경로상 변수가 있으면, () 부분은 경로 변수로 처리
+    * 경로를 만드는 부분과 데이터가 있는 부분이 분리 되어 있어 유지보수 용이
+
+  ##### ✔️ 경로 변수 + 쿼리 파라미터
+  * `@{/hello/{param1}(param1=${param1}, param2=${param2})}` ➡️ `/hello/data1?param2=data2`
+  * 경로 변수와 쿼리 파라미터 함께 사용 가능
+
+* 리터럴 (Literals)
 </details>
