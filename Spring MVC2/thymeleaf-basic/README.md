@@ -124,13 +124,18 @@
           <li>'hello world!' = <span th:text="'hello world!'"></span></li>
           <li>'hello ' + ${data} = <span th:text="'hello ' + ${data}"></span></li>
           <li>리터럴 대체 |hello ${data}| = <span th:text="|hello ${data}|"></span></li>
-          </div>
           ```
     * 숫자 : `10`
     * 참, 거짓 : `true`, `false`
     * null : `null`  
 
 * 연산
+  * 산술 연산
+    ```html
+    <li>10 + 2 = <span th:text="10 + 2"></span></li> // 10 + 2 = 12
+    <li>10 % 2 == 0 = <span th:text="10 % 2 == 0"></span></li> // 10 % 2 == 0 = true
+    ``` 
+
   * 비교 연산 : HTML 엔티티 사용
     * `>` ➡️ `(gt)`
     * `<` ➡️ `(lt)`
@@ -139,7 +144,31 @@
     * `!` ➡️ `not`
     * `==` ➡️ `(eq)`
     * `!=` ➡️ `(neq, ne)`
+    ```html
+    <li>1 > 10 = <span th:text="1 > 10"></span></li> // 1 > 10 = false
+    <li>1 gt 10 = <span th:text="1 gt 10"></span></li> // 1 gt 10 = false
+    <li>1 &gt; 10 = <span th:text="1 &gt; 10"></span></li> // 1 &gt; 10 = false
+    ``` 
+
   * 조건식 : 자바 조건식과 유사
-  * Elvis 연산자 : 조건식 편의 버전
-  * No-Operation : _인 경우, 마치 타임리프가 실행되지 않는 것처럼 동작 (HTML 내용 그대로 출력 ➡️ HTML 내용이 기본값) 
+    ```html
+    <li>(10 % 2 == 0)? '짝수':'홀수' = <span th:text="(10 % 2 == 0)? '짝수':'홀수'"></span></li> // (10 % 2 == 0)? '짝수':'홀수' = 짝수
+    ```   
+
+  * Elvis 연산자
+    * `?:`
+    * `?:`의 왼쪽 객체가 Not-Null ➡️ 그 객체의 값 리턴, Null ➡️ `?:`의 오른쪽 값 리턴 
+    ```html
+    <li>${data}?: '데이터가 없습니다.' = <span th:text="${data}?: '데이터가 없습니다.'"></span></li> // ${data}?: '데이터가 없습니다.' = Spring!
+    <li>${nullData}?: '데이터가 없습니다.' = <span th:text="${nullData}?: '데이터가 없습니다.'"></span></li> // ${nullData}?: '데이터가 없습니다.' = 데이터가 없습니다.
+    ```  
+
+  * No-Operation : _인 경우, 마치 타임리프가 실행되지 않는 것처럼 동작 (HTML 내용 그대로 출력 ➡️ HTML 내용이 기본값)
+    * `?: _`
+    ```html
+    <li>${data}?: _ = <span th:text="${data}?: _">데이터가 없습니다.</span></li> // ${data}?: _ = Spring!
+    <li>${nullData}?: _ = <span th:text="${nullData}?: _">데이터가 없습니다.</span></li> // ${nullData}?: _ = 데이터가 없습니다.
+    ```
+
+* 속성 값 설정
 </details>
