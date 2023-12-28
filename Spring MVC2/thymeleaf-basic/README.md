@@ -14,7 +14,7 @@
 <details>
 
 **<summary> `Section 1) 타임리프 - 기본 기능` </summary>**
-#### 타임리프 특징
+#### 🌿 타임리프 특징
 * 서버 사이드 HTML 렌더링 (SSR)
    * 백엔드 서버에서 HTML을 동적으로 렌더링 하는 용도로 사용 
 
@@ -38,18 +38,18 @@
     * HTML에서 사용하는 특수 문자를 ***HTML 엔티티**로 변경하는 것
       * HTML 엔티티 : HTML에 미리 예약된 문자인 HTML 예약어(reserved characters)를 HTML 코드에서 사용하면, 웹 브라우저는 평소와 다른 의미로 해석하게 됨 ➡️ 따라서 HTML 예약어를 기존에 사용하던 의미 그대로 사용하기 위해 별도로 만든 문자셋
   
-    * 타임리프의 `th:text`, `[[...]]` : 기본적으로 이스케이프 제공
+    * 🌿 타임리프의 `th:text`, `[[...]]` : 기본적으로 이스케이프 제공
       * 예 : `<` ➡️ `&lt;`, `>` ➡️ `&gt;` 
   
   * UnEscape
-    * 타임리프에서 이스케이프 기능을 사용하지 않을 경우
+    * 🌿 타임리프에서 이스케이프 기능을 사용하지 않을 경우
       * `th:text` ➡️ `th:utext`
       * `[[...]]` ➡️ `[(...)]`
 
   #### 👉 Escape를 기본으로 하고, 꼭 필요할 때만 UnEscape를 사용하자!
 
 * 변수 - SpringEL
-  * 타임리프에서 변수를 사용할 때 : 변수 표현식(`${...}`) ➕ 스프링이 제공하는 표현식(SpringEL) 사용
+  * 🌿 타임리프에서 변수를 사용할 때 : 변수 표현식(`${...}`) ➕ 스프링이 제공하는 표현식(SpringEL) 사용
 
   #### SpringEL 다양한 표현식 사용
   ##### ✔️ Object
@@ -79,7 +79,7 @@
     * List에서 첫번째 회원을 찾아 `first`에 담아두고 `username`에 프로퍼티 접근 ➡️ 결과 : 처음 사람의 이름 출력
 
 * 기본 객체
-  * 타임리프에서 제공하는 기본 객체
+  * 🌿 타임리프에서 제공하는 기본 객체
   * `#` 기호로 시작
     * `#ctx`
     * `#vars`
@@ -114,5 +114,32 @@
   * `@{/hello/{param1}(param1=${param1}, param2=${param2})}` ➡️ `/hello/data1?param2=data2`
   * 경로 변수와 쿼리 파라미터 함께 사용 가능
 
-* 리터럴 (Literals)
+* 리터럴 (Literals) - 소스 코드상 고정된 값
+  ##### 🌿 타임리프의 리터럴
+    * 문자 : `'hello'`
+      * 항상 `'` (작은 따옴표)로 감싸야 함
+        * BUT, 공백 없이 쭉 이어진다면 작은 따옴표 생략 가능
+          ```html
+          <li>'hello' + ' world!' = <span th:text="'hello' + ' world!'"></span></li>
+          <li>'hello world!' = <span th:text="'hello world!'"></span></li>
+          <li>'hello ' + ${data} = <span th:text="'hello ' + ${data}"></span></li>
+          <li>리터럴 대체 |hello ${data}| = <span th:text="|hello ${data}|"></span></li>
+          </div>
+          ```
+    * 숫자 : `10`
+    * 참, 거짓 : `true`, `false`
+    * null : `null`  
+
+* 연산
+  * 비교 연산 : HTML 엔티티 사용
+    * `>` ➡️ `(gt)`
+    * `<` ➡️ `(lt)`
+    * `>=` ➡️ `(ge)`
+    * `<=` ➡️ `(le)`
+    * `!` ➡️ `not`
+    * `==` ➡️ `(eq)`
+    * `!=` ➡️ `(neq, ne)`
+  * 조건식 : 자바 조건식과 유사
+  * Elvis 연산자 : 조건식 편의 버전
+  * No-Operation : _인 경우, 마치 타임리프가 실행되지 않는 것처럼 동작 (HTML 내용 그대로 출력 ➡️ HTML 내용이 기본값) 
 </details>
