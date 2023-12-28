@@ -170,5 +170,19 @@
     <li>${nullData}?: _ = <span th:text="${nullData}?: _">데이터가 없습니다.</span></li> // ${nullData}?: _ = 데이터가 없습니다.
     ```
 
-* 속성 값 설정
+* 속성
+  * 속성 설정 
+    * 🌿 타임리프는 주로 HTML 태그에 `th:*` 속성을 지정하는 방식으로 동작
+    * 기존 속성이 있으면 `th:*`로 지정한 속성으로 대체, 기존 속성이 없으면 새로 생성
+
+  * 속성 추가
+    * `th:attrappend` : 속성 값 뒤에 값 추가
+    * `th:attrprepend` : 속성 값 앞에 값 추가
+    * `th:classappend` : class 속성의 적절한 위치에 값 추가
+
+  * checked 처리
+    * HTML의 checked 속성 : checked 속성 값과 상관없이 checked라는 속성만 있어도 체크됨 ➡️ 타임리프의 `th:checked` 사용시, 값이 false면 checked 속성 자체를 제거해줌 (체크 처리 ❌)
+
+* 반복
+  * `th:each` 
 </details>
