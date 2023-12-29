@@ -115,7 +115,7 @@
   * 경로 변수와 쿼리 파라미터 함께 사용 가능
 
 * 리터럴 (Literals) - 소스 코드상 고정된 값
-  ##### 🌿 타임리프의 리터럴
+🌿 🌿 타임리프의 리터럴
     * 문자 : `'hello'`
       * 항상 `'` (작은 따옴표)로 감싸야 함
         * BUT, 공백 없이 쭉 이어진다면 작은 따옴표 생략 가능
@@ -184,5 +184,73 @@
     * HTML의 checked 속성 : checked 속성 값과 상관없이 checked라는 속성만 있어도 체크됨 ➡️ 타임리프의 `th:checked` 사용시, 값이 false면 checked 속성 자체를 제거해줌 (체크 처리 ❌)
 
 * 반복
-  * `th:each` 
+  * 반복 기능
+    * `<tr th:each="user : ${users}">`
+      * 오른쪽 컬렉션 (`${users}"`)의 값을 하나씩 꺼내 왼쪽 변수(`user`)에 담아 태그 반복 실행
+      * `java.util.Iterable`, `java.util.Enumeration`을 구현한 모든 객체에 반복 사용 가능
+
+  * 반복 상태 유지
+    * `<tr th:each="user, userStat : ${users}">`
+      * 반복에 두번째 파라미터를 설정하여 반복 상태 확인 가능 (두번째 파라미터 생략 가능 ➡️ 생락시 지정한 변수명 ➕ Stat)
+
+  * 반복 상태 유지 기능
+      * `index` : 0부터 시작하는 값
+      * `count` : 1부터 시작하는 값
+      * `size` : 전체 크기
+      * `even`, `odd` : 홀수, 짝수 여부 (결괏값 boolean)
+      * `first`, `last` : 처음, 마지막 여부 (결괏값 boolean)
+      * `current` : 현재 객체 정보
+   
+* 조건부 평가
+##### 🌿 타임리프의 조건식
+* `if`, `unless` (↔ `if`)
+  * 해당 조건이 맞지 않으면, 태그 자체 렌더링 ❌
+
+* `switch`
+  * case에 따른 태그 출력
+  * `*` : 조건이 없을 때 사용하는 디폴트
+  ```html
+  <td th:switch="${user.age}">
+    <span th:case="10">10살</span>
+    <span th:case="20">20살</span>
+    <span th:case="*">기타</span>
+  </td>
+  ```
+
+* 주석
+  ##### 1️⃣ 표준 HTML 주석
+  * `<!-- ... -->`
+  * 타임리프가 렌더링 하지 않고 그대로 남겨둠
+
+  ##### 2️⃣ 타임리프 파서 주석
+  * 한 줄 처리 : `<!--/* ... /-->`
+    * 절대경로로 열었을 때, HTML 주석으로 처리하여 웹 브라우저에서 렌더링 ❌
+  * 여러 줄 처리 : `<!--/--> ... <!--/-->`
+    * 절대경로로 열었을 때, HTML 주석 규칙에 따라 렌더링
+  * 타임리프의 진짜 주석 ➡️ 렌더링 해서 주석 부분 제거 
+
+  ##### 3️⃣ 타임리프 프로토타입 주석
+  * `<!--/*/ ... /*/-->`
+  * 절대경로로 열었을 때, HTML 주석으로 처리하여 웹 브라우저에서 렌더링 ❌
+  * 타임리프 렌더링을 거치면, 정상 렌더링
+
+* 블록
+  * `th:block`
+  * 🌿 타임리프 자체 태그
+  * 반복할 태그가 여러 가지일 때 사용하면 편리
+  * 렌더링시 `<th:block>` 태그 제거됨
+  ```html
+  <th:block th:each="user : ${users}">
+    <div>
+      사용자 이름<span th:text="${userStat.count} + ' ' + ${user.username}"></span>
+      사용자 나이<span th:text="${userStat.count} + ' ' + ${user.age}"></span>
+    </div>
+    <div>
+      요약 <span th:text="${user.username} + ' / ' + ${user.age}"></span>
+    </div>
+  </th:block>
+  ```
+
+* 자바스크립트 인라인
+  * `<script th:inline="javascript">` 
 </details>
