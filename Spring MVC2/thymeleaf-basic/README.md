@@ -325,13 +325,33 @@
   
   ##### ✔️ 폼 컴포넌트 기능
   * `checkbox`
-    ##### 방법 1. HTML checkbox
-    * 체크박스를 선택한 경우 : `true`
-    * 체크박스를 선택하지 않은 경우 : 클라이언트에서 서버로 값 자체를 보내지 않음 (`null`)
-      * ⚠️ 체크박스 선택을 수정하려고 할 때, 사용자가 체크되어 있던 값을 체크 해체해도 저장시 아무 값도 넘어가지 않아 값이 오지 않은 것으로 판단하여 변경된 값으로 인식하지 못 할 수도 있음
+    #### 1. 단일 
+      ##### 방법 1️⃣ HTML checkbox
+      ```html
+      <input type="checkbox" id="open" name="open" class="form-check-input">
+      ```
+      * 체크박스를 선택한 경우 : `true`
+      * 체크박스를 선택하지 않은 경우 : 클라이언트에서 서버로 값 자체를 보내지 않음 (`null`)
+        * ⚠️ 체크박스 선택을 수정하려고 할 때, 사용자가 체크되어 있던 값을 체크 해체해도 저장시 아무 값도 넘어가지 않아 값이 오지 않은 것으로 판단하여 변경된 값으로 인식하지 못 할 수도 있음
 
-    ##### 방법 2. 타임리프 적용하기
-  
+      ##### 방법 2️⃣ 타임리프 적용하기
+      ```html
+      <input type="checkbox" id="open" th:field="*{open}" class="form-check-input">
+      ```
+      * 체크박스를 선택한 경우 : `true`
+        ```html
+        <input type="checkbox" id="open" class="form-check-input" name="open" value="true" checked="checked">
+        ```
+        * `checked` 속성이 자동 생성되면서 체크 유무 확인
+      
+      * 체크박스를 선택하지 않은 경우 : `false`
+        ```html
+        <input type="checkbox" id="open" class="form-check-input" name="open" value="true">
+        ```
+        * `checked` 속성 생성 ❌
+
+    #### 2. 다중 선택
+      
   * `radio button`
   * `select box`
   
