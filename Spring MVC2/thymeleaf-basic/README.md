@@ -350,7 +350,25 @@
         ```
         * `checked` 속성 생성 ❌
 
-    #### 2. 다중 선택
+    #### 2. 멀티
+      ##### Controller
+      * `@ModelAttribute`
+        * 이 애노테이션이 선언된 메서드를 생성하면, 해당 컨트롤러 내의 모든 매핑 메서드의 `model`에 반환값 자동 전달
+        * `@ModelAttribute` 의 매개변수 : Web 계층에서 사용할 변수명
+
+      ##### Web
+      * `th:each` : `@ModelAttribute` 의 매개변수를 사용하여 반복문을 돌면서 여러가지 체크박스 생성
+      * input 태그의 `th:field` : Entity 필드값
+        * `th:value` : param으로 보내야 되기 때문에 map의 key값 사용 ➡️ Entity의 List region에 저장
+      * label 태그의 `th:text` : map의 value가 체크박스 이름으로 랜더링
+      * `${#ids.prev('...')}` : `each`문 내에 설정된 경우 `index`마다 동적으로 중복 없이 id 생성
+
+      ```html
+      <div th:each="region : ${regions}" class="form-check form-check-inline">
+        <input type="checkbox" th:field="*{regions}" th:value="${region.key}" class="form-check-input">
+        <label th:for="${#ids.prev('regions')}" th:text="${region.value}" class="form-check-label"></label>
+      </div>
+      ```
       
   * `radio button`
   * `select box`
