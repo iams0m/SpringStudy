@@ -1391,3 +1391,5 @@ public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
 * `redirect:/basic/items/{itemId}` : `redirect`에서 컨트롤러에 매핑된 `@PathVariable` 값 사용 가능
 
 </details>
+
+#### 05. 🍃 스프링 MVC 2편 - 백엔드 웹 개발 활용 기술
