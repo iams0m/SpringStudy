@@ -424,3 +424,30 @@
   ##### ✔️ 스프링의 변환 서비스 통합(ConversionService)
 
 </details>
+
+<details>
+
+**<summary> `Section 3) 메시지, 국제화` </summary>**
+#### 메시지
+* 화면에 렌더링 된 text를 변경해야 하는 경우
+  * 웹 애플리케이션의 규모가 클수록 변경해야 하는 text 증가 및 직접 파일을 수정하다가 오류가 발생할 수 있음
+#### ➡️ 이런 다양한 text들을 별도의 파일에서 관리하도록 하는 메시지
+##### [예시]
+* `message.properties`라는 메시지 관리용 파일 생성
+* HTML 내에서 사용할 데이터를 파일에 선언된 key 값으로 불러서 사용 (`item.itemName`) ➡️ text를 변경해야될 경우, 파일에 선언해준 부분만 변경하면 됨 (🦴 **유지보수 용이 및 일관성 증가**)
+```text
+item=상품
+item.id=상품 ID
+item.itemName=상품명
+item.price=가격
+item.quantity=수량
+```
+
+#### 국제화
+* 메시지 파일(`message.properties`)을 각 나라별로 별도 관리하여 서비스 국제화
+  * 방법 1️⃣ : HTTP accept-language 헤더 값 사용
+  * 방법 2️⃣ : 사용자가 직접 언어를 선택하도록 하고, 쿠키 등을 사용하여 처리
+
+#### ⚠️ 기본적인 메시지, 국제화 기능은 Spring이 제공함
+  ##### 타임리프도 스프링이 제공하는 메시지와 국제화 기능을 편리하게 통합하여 제공함
+</details>
