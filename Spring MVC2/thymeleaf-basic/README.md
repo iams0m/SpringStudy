@@ -361,7 +361,8 @@
       * input 태그의 `th:field` : Entity 필드값
         * `th:value` : param으로 보내야 되기 때문에 map의 key값 사용 ➡️ Entity의 List region에 저장
       * label 태그의 `th:text` : map의 value가 체크박스 이름으로 랜더링
-      * `${#ids.prev('...')}` : `each`문 내에 설정된 경우 `index`마다 동적으로 중복 없이 id 생성
+      * `${#ids.prev('...')}` : `each`문 내에 설정된 경우 `index`마다 id가 동적으로 중복 없이 생성되는데, 이 생성된 id를 labal 태그로 가져와서 사용할 수 있도록 함
+        * 여기서는 input 태그의 id와 label 태그의 id를 맞춤 
 
       ```html
       <div th:each="region : ${regions}" class="form-check form-check-inline">
@@ -391,9 +392,6 @@
   
     ##### Web
     ```html
-    <!-- radio button -->
-    <div>
-     <div>상품 종류</div>
      <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
   	   <input type="radio"
               th:field="*{itemType}"
@@ -403,11 +401,21 @@
               th:text="${type.description}"
               class="form-check-label"></label>
      </div>
-    </div>
     ```
     * 🌿 타임리프는 model에 ENUM을 담아서 전달하는 대신, 스프링 EL 문법으로 자바 객체 직접 접근도 가능 (권장 ❌)
-  
+
   * `select box`
+    ##### Web
+    ```html
+     <select th:field="*{deliveryCode}" class="form-select">
+  	   <option value="">==배송 방식 선택==</option>
+       <option th:each="deliveryCode : ${deliveryCodes}"
+               th:value="${deliveryCode.code}"
+          	   th:text="${deliveryCode.displayName}"></option>
+     </select>
+    ```
+    * select 태그 사용
+    * 선택된 select box에 `selected="selected"` 생성 
   
   ##### ✔️ 스프링의 메시지, 국제화 기능의 편리한 통합
   
