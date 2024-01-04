@@ -334,7 +334,7 @@
       * 체크박스를 선택하지 않은 경우 : 클라이언트에서 서버로 값 자체를 보내지 않음 (`null`)
         * ⚠️ 체크박스 선택을 수정하려고 할 때, 사용자가 체크되어 있던 값을 체크 해체해도 저장시 아무 값도 넘어가지 않아 값이 오지 않은 것으로 판단하여 변경된 값으로 인식하지 못 할 수도 있음
 
-      ##### 방법 2️⃣ 타임리프 적용하기
+      ##### 방법 2️⃣ 🌿 타임리프 적용하기
       ```html
       <input type="checkbox" id="open" th:field="*{open}" class="form-check-input">
       ```
@@ -365,12 +365,48 @@
 
       ```html
       <div th:each="region : ${regions}" class="form-check form-check-inline">
-        <input type="checkbox" th:field="*{regions}" th:value="${region.key}" class="form-check-input">
-        <label th:for="${#ids.prev('regions')}" th:text="${region.value}" class="form-check-label"></label>
+        <input type="checkbox"
+               th:field="*{regions}"
+               th:value="${region.key}"
+               class="form-check-input">
+        <label th:for="${#ids.prev('regions')}"
+               th:text="${region.value}"
+               class="form-check-label"></label>
       </div>
       ```
       
   * `radio button`
+    * 멀티 체크박스와 유사
+    * 라디오 버튼을 선택한 경우 : 선택한 값 전송
+    * 라디오 버튼을 처음에 선택하지 않은 경우 : null
+      * 값을 한번 선택하면, 이후 선택하지 않을 수 없음 ➡️ 별도의 hidden 필드 사용할 필요 ❌ 
+    ##### Controller
+    ```java
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes() {
+     return ItemType.values();
+    }
+    ```
+    * `ItemType.values();` : 해당 ENUM의 모든 정보를 배열로 반환
+  
+    ##### Web
+    ```html
+    <!-- radio button -->
+    <div>
+     <div>상품 종류</div>
+     <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
+  	   <input type="radio"
+              th:field="*{itemType}"
+              th:value="${type.name()}"
+              class="form-check-input">
+  	   <label th:for="${#ids.prev('itemType')}"
+              th:text="${type.description}"
+              class="form-check-label"></label>
+     </div>
+    </div>
+    ```
+    * 🌿 타임리프는 model에 ENUM을 담아서 전달하는 대신, 스프링 EL 문법으로 자바 객체 직접 접근도 가능 (권장 ❌)
+  
   * `select box`
   
   ##### ✔️ 스프링의 메시지, 국제화 기능의 편리한 통합
