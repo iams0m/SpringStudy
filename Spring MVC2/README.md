@@ -449,5 +449,75 @@ item.quantity=수량
   * 방법 2️⃣ : 사용자가 직접 언어를 선택하도록 하고, 쿠키 등을 사용하여 처리
 
 #### ⚠️ 기본적인 메시지, 국제화 기능은 Spring이 제공함
-  ##### 타임리프도 스프링이 제공하는 메시지와 국제화 기능을 편리하게 통합하여 제공함
+  ##### 🌿 타임리프도 스프링이 제공하는 메시지와 국제화 기능을 편리하게 통합하여 제공함
+
+#### 스프링 메시지 소스 설정
+  ##### 📍 스프링 빈 등록
+  * 스프링이 제공하는 메시지 관리 기능을 사용하려면 `MessageSource`를 Spring Bean에 등록해야함 (➡️ 스프링 부트를 사용하면, 자동으로 등록해줌)
+  ```java
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("messages", "errors");
+        messageSource.setDefaultEncoding("utf-8");
+        return messageSource;
+    }
+  ```
+  * `setBasenames` : 설정 파일 이름 지정
+    * `messages`로 지정하면 `messages.properties` 파일을 읽어서 사용
+    * 클라이언트가 사용하는 특정 언어가 있을 경우, 그 파일로 대체
+    * 여러 파일 한번에 지정 가능 (`messages`, `errors`)
+  * `setDefaultEncoding` : 인코딩 정보 지정 
+  
+  ##### 📍 스프링 부트 메시지 소스 설정
+  * `application.properties`에 `basename` 추가 
+  ```properties
+    spring.messages.basename=messages
+  ```
+  * 기본값으로 `messages` 라는 파일을 사용하겠다는 의미
+  * 클라이언트가 사용하는 특정 언어가 있을 경우, 그 파일로 대체됨
+
+#### 스프링 메시지 소스 사용
+  ##### 📍 `MessageSource` 인터페이스
+  ```java
+    public interface MessageSource {
+
+        @Nullable
+        String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale);
+
+        String getMessage(String code, @Nullable Object[] args, Locale locale) throws NoSuchMessageException;
+    }
+  ```
+
+  ##### 📍 기본 메시지 조회 방법
+  * code : 메시지 파일에 등록한 변수
+  * args : 파일에 설정한 파라미터를 args로 치환
+  * locale : 로케일 정보, 정보가 없으면 `basename`에서 설정한 기본 이름 메시지 파일 조회
+
+  ##### 📍 메시지가 없는 경우
+  * 파일에 정의되지 않은 코드를 입력할 경우 `NoSuchMessageException` 발생
+  
+  ##### 📍 기본 메시지
+  * `defaultMessage` : 파일에 정의되지 않은 코드를 입력할 경우 기본적으로 나타나는 메시지
+    * `args`와 `locale` 사이에 `defaultMessage` 파라미터 설정 가능
+   
+  ##### 📍 args 매개변수 사용
+  * `args` 매개변수를 활용하여 상황에 맞게 message 변형 가능
+    * Object 배열로 넘겨주어야 함
+    * 배열의 인덱스 번호에 맞게 파라미터 변형
+      * `hello.name=안녕 {0}` 
+    ```java
+       @Test
+       void argumentMessage() {
+           String result = ms.getMessage("hello.name", new Object[]{"Spring"}, null);
+           assertThat(result).isEqualTo("안녕 Spring");
+       }
+    ```
+  
+  ##### 📍 국제화
+  * locale 정보를 기반으로 국제화 파일 선택
+    * `null` : 시스템의 기본 locale 사용
+      * 시스템 기본 locale이 ko_KR이면, `messages_ko.properties` 조회 시도 ➡️ 조회 실패 ➡️ `messages.properties` 순으로 조회  
+    * `Locale.KOREA` : `messages_ko`를 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
+    * `Locale.ENGLISH` : `messages_en`을 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
 </details>
