@@ -520,4 +520,24 @@ item.quantity=수량
       * 시스템 기본 locale이 ko_KR이면, `messages_ko.properties` 조회 시도 ➡️ 조회 실패 ➡️ `messages.properties` 순으로 조회  
     * `Locale.KOREA` : `messages_ko`를 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
     * `Locale.ENGLISH` : `messages_en`을 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
+
+#### 웹 애플리케이션에 메시지 및 국제화 적용하기
+  ##### 📍 메시지 적용  
+  * 타임리프 메시지 표현식 : `#{...}`
+    * `...` 에 메시지 코드를 넣어주면, 렌더링 할 때 메시지로 변환
+    * 파라미터를 사용할 경우, 괄호 안에 값을 넣어 사용
+      * `hello.name=안녕 {0}` 
+      ```html
+         <p th:text="#{hello.name(${item.itemName})}"></p>
+      ```
+
+  ##### 📍 국제화 적용
+  * 이미 메시지를 사용하도록 타임리프를 적용했다면, 국제 메시지 파일 생성시 바로 국제화 적용
+  * 웹 브라우저의 언어 설정 값을 변경하여 국제화 적용 확인 가능
+</details>
+
+<details>
+
+**<summary> `Section 4) 검증1 - Validation` </summary>**
+
 </details>
