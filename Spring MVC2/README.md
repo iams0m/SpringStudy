@@ -553,4 +553,63 @@ item.quantity=수량
     ##### ➡️ 적절히 섞어서 사용하되, 최종적으로 서버 검증 필수
 
 #### V1. 직접 검증 처리하기
+  ##### 📍 Controller
+  * 어떤 검증에서 오류가 발생했는지 `errors`에 결과 보관
+    * `Map<String, String> errors = new HashMap<>();`
+  
+  * 검증 로직
+    * Map을 사용하여 어떤 필드에서 오류가 발생했는지 구분하기 위해 오류가 발생한 필드명을 `key`로, 클라이언트에게 보여줄 메시지를 `value`로 설정
+    ```java
+       if (!StringUtils.hasText(item.getItemName())) {
+           errors.put("itemName", "상품 이름은 필수입니다.");
+       }
+    ```      
+
+  * 검증 실패 로직
+    * 검증에서 오류 메시지가 하나라도 있으면, 오류 메시지 출력을 위해 `model`에 `errors`를 담고 입력 폼이 있는 뷰 템플릿으로 이동 
+    ```java
+       if (!errors.isEmpty()) {
+           model.addAttribute("errors", errors);
+           return "validation/v1/addForm";
+       }
+    ```  
+
+  ##### 📍 Web
+  * 오류 메시지
+    * `th:if` : 조건문을 사용해 `errors`의 `key`가 있다면, 해당 `value`를 렌더링하여 태그 출력
+    ```html
+       <div class="field-error" th:if="${errors?.containsKey('itemName')}" th:text="${errors['itemName']}">
+           상품명 오류
+       </div>
+    ```
+    ##### 🤔 `errors` 뒤의 물음표는 뭘까?
+    * 신규로 등록하는 상황은 `map`을 `model`로 보내지 못했기 때문에 `errors`자체가 null이 됨
+      * `errors.containsKey` : null에 .containsKey을 했다는 의미 ➡️ `NullPointerException` 발생
+    * `errors?.` : `errors`가 null일 때, null 반환 ➡️ 오류 메시지 출력 ❌ 
+
+  * 필드 오류 처리
+    ##### 방법 1️⃣ `th:class`
+    * `class`에 조건식을 사용하여 참일 경우, `form-control`과 `field-error` 호출
+      * 결과 : `class="form-control field-error”`
+    * 조건식을 만족하지 않으면, `form-control` 호출
+      * 결과 : `class="form-control”` 
+    ```html
+       <input type="text" id="itemName" th:field="*{itemName}" th:class="${errors?.containsKey('itemName')} ? 'form-control field-error' : 'form-control'" class="form-control">
+    ```
+
+    ##### 방법 2️⃣ `th:classappend`
+    * `classappaend`에 조건식을 사용하여 참일 경우, 기존 클래스(`form-control`)에 `field-error` 추가
+    * 조건식을 만족하지 않으면, `_`(No-Operation)을 사용해서 기존 클래스(`form-control`)만 호출
+    ```html
+       <input type="text" th:classappend="${errors?.containsKey('itemName')} ? 'field-error' : _" class="form-control">
+    ```
+
+  ##### ✏️ V1의 문제점
+  * 코드의 중복
+    * 하나의 input 로직에 같은 변수를 계속해서 입력해줘야 함
+  * 타입 오류 처리 ❌
+    * 타입이 다른 text를 입력할 경우, 예외 처리가 되지 않고 400 에러 발생
+    * 클라이언트가 작성한 데이터의 보존을 보장할 수 없어 사용자는 어떤 문제로 오류가 발생했는지 이해하기 어려움
+  
+#### V2
 </details>
