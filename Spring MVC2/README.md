@@ -611,5 +611,51 @@ item.quantity=수량
     * 타입이 다른 text를 입력할 경우, 예외 처리가 되지 않고 400 에러 발생
     * 클라이언트가 작성한 데이터의 보존을 보장할 수 없어 사용자는 어떤 문제로 오류가 발생했는지 이해하기 어려움
   
-#### V2
+#### V2. BindingResult
+  ##### 📍 Controller
+  * `BindingResult`
+    * 스프링에서 제공하는 validation 라이브러리
+    * Map의 기능을 대신하며, 오류가 발생했을 때 `BindingResult`가 `errors` 역할을 대신함
+    * `Model`로 넘겨주지 않아도 스프링이 자동 전달
+
+  * `FieldError`
+    ```java
+       public FieldError(String objectName, String field, String defaultMessage) {}
+    ```
+      * 필드에 오류가 있을 때, `FieldError` 객체를 생성하여 `bindingResult`에 담아둠
+        * `objectName` : `@ModelAttribute` 이름
+        * `field` : 오류 발생 필드 이름
+        * `defaultMessage` : 오류 기본 메시지
+
+  * `ObjectError`
+    ```java
+       public ObjectError(String objectName, String defaultMessage) {}
+    ```
+      * 특정 필드를 넘어서는 오류가 있을 때, `ObjectError` 객체를 생성하여 `bindingResult`에 담아둠
+        * `objectName` : `@ModelAttribute` 이름
+        * `defaultMessage` : 오류 기본 메시지
+  
+  #### ⚠️ `BindingResult` 파라미터의 위치는 항상 바인딩 대상이 되는 객체 바로 뒤에 위치해야 한다.
+  
+  ##### 📍 Web
+  * `타임리프 - 스프링` 검증 오류 통합 기능
+    * `#fields` : `BindingResult`의 타임리프 변수 표현식
+    * `th:errors` : 해당 필드에 오류가 있는 경우 태그 출력 (`th:if`와 유사)
+    * `th:errorclass` : `th:field`에서 지정한 필드에 오류가 있으면, `class` 정보 추가 (class append와 유사)
+  
+  * 글로벌 오류 처리
+    * if문을 사용하여 글로벌 오류가 있다면, 오류 메시지 렌더링 
+    ```html
+       <div th:if="${#fields.hasGlobalErrors()}">
+           <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+       </div>
+    ```
+    
+  * 필드 오류 처리
+    ```html
+       <input type="text" id="itemName" th:field="*{itemName}" th:errorclass="field-error" class="form-control" placeholder="이름을 입력하세요">
+       <div class="field-error" th:errors="*{itemName}">
+           상품명 오류
+       </div>
+    ```
 </details>
