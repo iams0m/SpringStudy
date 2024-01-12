@@ -620,21 +620,32 @@ item.quantity=수량
     ##### ⚠️ `BindingResult` 파라미터의 위치는 항상 바인딩 대상이 되는 객체 바로 뒤에 위치해야 한다.
 
   * `FieldError`
-    ```java
-       public FieldError(String objectName, String field, String defaultMessage) {}
-    ```
-      * 필드에 오류가 있을 때, `FieldError` 객체를 생성하여 `bindingResult`에 담아둠
-        * `objectName` : `@ModelAttribute` 이름
-        * `field` : 오류 발생 필드 이름
-        * `defaultMessage` : 오류 기본 메시지
+    * `FieldError`에서 제공하는 생성자 두 가지
+      ```java
+         // 생성자 1
+         public FieldError(String objectName, String field, String defaultMessage);
+
+         // 생성자 2
+         public FieldError(String objectName, String field, @Nullable Object rejectedValue, boolean bindingFailure, @Nullable String[] codes, @Nullable Object[] arguments, @Nullable String defaultMessage);
+      ```   
+      * **생성자 1️⃣** : 필드 검증 실패시, text box에 클라이언트가 입력한 데이터 삭제
+        * 필드에 오류가 있을 때, `FieldError` 객체를 생성하여 `bindingResult`에 담아둠
+          * `objectName` : `@ModelAttribute` 이름
+          * `field` : 오류 발생 필드 이름
+          * `defaultMessage` : 오류 기본 메시지
+        
+      * **생성자 2️⃣** : 필드 검증 실패시, text box에 클라이언트가 입력한 **데이터 유지**
+        * 필드에 오류가 있을 때, `FieldError` 객체를 생성하여 사용자가 입력한 값을 `rejectedValue`에 담아둠 ➡️ 해당 오류를 `bindingResult`에 담아서 컨트롤러 호출
+          * `rejectedValue` : 사용자가 입력한 값(거절된 값)을 저장하는 필드
+          * `bindingFailure` : type 오류일 경우 `true` / 검증 실패일 경우 `false` 입력
+          * `codes` : 메시지 코드
+          * `arguments` : 메시지 코드에서 사용하는 인자
 
   * `ObjectError`
     ```java
-       public ObjectError(String objectName, String defaultMessage) {}
+       public ObjectError(String objectName, @Nullable String[] codes, @Nullable Object[] arguments, @Nullable String defaultMessage) {}
     ```
       * 특정 필드를 넘어서는 오류가 있을 때, `ObjectError` 객체를 생성하여 `bindingResult`에 담아둠
-        * `objectName` : `@ModelAttribute` 이름
-        * `defaultMessage` : 오류 기본 메시지
   
   ##### 📍 Web
   * `타임리프 - 스프링` 검증 오류 통합 기능
@@ -662,4 +673,5 @@ item.quantity=수량
   * `BindingResult`가 없는 경우 : 400에러가 발생하면서 오류 페이지로 이동하고 컨트롤러 호출 ❌
   * `BindingResult`가 있는 경우 : 오류 정보를 `BindingResult`에 담고 **컨트롤러 정상 호출**
 
+##### 🤔 검증에 실패한 경우 클라이언트가 입력했던 데이터들이 사라지지 않게 하려면 어떻게 해야 할까?
 </details>
