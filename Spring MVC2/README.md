@@ -646,6 +646,19 @@ item.quantity=수량
        public ObjectError(String objectName, @Nullable String[] codes, @Nullable Object[] arguments, @Nullable String defaultMessage) {}
     ```
       * 특정 필드를 넘어서는 오류가 있을 때, `ObjectError` 객체를 생성하여 `bindingResult`에 담아둠
+
+  #### ✏️ `BindingResult`는 바인딩 대상이 되는 객체 바로 뒤에 위치하기 때문에 이미 본인이 검증해야하는 객체를 알고 있다! (➡️ 따라서 objectName을 넣어주는 과정 생략 가능)
+
+  ##### 📍 `rejectValue()`, `reject()`
+  * `BindingResult`가 제공하는 두 가지 method를 사용하면, Error를 직접 생성하지 않고 깔끔한 검증 오류 가능
+  * Field : `rejectValue()` / Object : `reject()`
+    ```java
+    void rejectValue(@Nullable String field, String errorCode, @Nullable Object[] errorArgs, @Nullable String defaultMessage);
+    ```  
+     * `field` : 오류 발생 필드 이름
+     * `errorCode` : 오류 코드
+     * `errorArgs` : 에러 코드에서 사용하는 인자
+     * `defaultMessage` : 오류 기본 메시지
   
   ##### 📍 Web
   * `타임리프 - 스프링` 검증 오류 통합 기능
