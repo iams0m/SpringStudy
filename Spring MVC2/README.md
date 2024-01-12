@@ -673,5 +673,22 @@ item.quantity=수량
   * `BindingResult`가 없는 경우 : 400에러가 발생하면서 오류 페이지로 이동하고 컨트롤러 호출 ❌
   * `BindingResult`가 있는 경우 : 오류 정보를 `BindingResult`에 담고 **컨트롤러 정상 호출**
 
-##### 🤔 검증에 실패한 경우 클라이언트가 입력했던 데이터들이 사라지지 않게 하려면 어떻게 해야 할까?
+#### 오류 메시지 일관성 유지
+##### 📍 문제점
+* 지금까지 구현한 로직의 에러 메시지 : 검증 로직마다 그때그때 개발자가 입력 ➡️ 메시지의 일관성 떨어짐 
+  * 🤓 메시지 파일에 에러 메시지를 등록해 일관성 있게 관리해보자 
+
+##### 1️⃣ 메시지 파일 생성 
+* `errors.properties` 생성 
+##### 2️⃣ 메시지 설정 추가
+* 스프링 부트가 해당 메시지 파일을 인식할 수 있도록 `application.properties`에 `errors` 설정 추가
+  * `spring.messages.basename=messages,errors`
+##### 3️⃣ 메시지 파일 적용
+* 메시지 코드와 argument 매개변수를 배열로 입력
+  * 0번 index가 없다면 1번 index가 출력되는 방식으로 우선순위를 설정할 수 있도록 배열 사용
+  * 메시지 코드를 찾지 못하면, 디폴트 메시지 출력
+```java
+    //range.item.price=가격은 {0} ~ {1} 까지 허용합니다.
+        new FieldError("item", "price", item.getPrice(), false, new String[]{"range.item.price"}, new Object[]{1000, 1000000}, null)
+```
 </details>
