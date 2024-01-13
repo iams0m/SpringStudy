@@ -716,5 +716,27 @@ item.quantity=수량
   * 개발 코드를 별도 수정할 필요 없이 메시지가 담겨 있는 `properties` 파일 수정 만으로도 오류 메시지 관리 가능
   * 스프링은 `MessageCodesResolver`를 통해 위의 기능 제공
 
-#### `MessageCodesResolver`
+  ##### 📍 `MessageCodesResolver`
+  * `MessageCodesResolver`에서 메시지 코드 생성 (➡️ rejectValue(), reject() : 내부에서 `MessageCodesResolver` 사용)
+  * 생성된 순서대로 오류 코드 보관
+    ```java
+        MessageCodesResolver codesResolver = new DefaultMessageCodesResolver();
+    ```
+   
+  * 기본 메시지 생성 규칙
+    ##### ✔️ ObjectError
+    ```text
+       1 : code + "." + object name
+       2 : code
+    ```
+
+    ##### ✔️ FieldError
+    ```text
+       1 : code + "." + object name + "." + field
+       2 : code + "." + field
+       3 : code + "." + field type
+       4 : code
+    ```   
+
+  
 </details>
