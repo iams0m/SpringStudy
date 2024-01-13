@@ -687,21 +687,34 @@ item.quantity=수량
   * `BindingResult`가 있는 경우 : 오류 정보를 `BindingResult`에 담고 **컨트롤러 정상 호출**
 
 #### 오류 메시지 일관성 유지
-##### 📍 문제점
-* 지금까지 구현한 로직의 에러 메시지 : 검증 로직마다 그때그때 개발자가 입력 ➡️ 메시지의 일관성 떨어짐 
-  * 🤓 메시지 파일에 에러 메시지를 등록해 일관성 있게 관리해보자 
+  ##### 📍 문제점
+  * 지금까지 구현한 로직의 에러 메시지 : 검증 로직마다 그때그때 개발자가 입력 ➡️ 메시지의 일관성 떨어짐 
+    * 🤓 메시지 파일에 에러 메시지를 등록해 일관성 있게 관리해보자 
+  
+  ##### 1️⃣ 메시지 파일 생성 
+  * `errors.properties` 생성 
+  ##### 2️⃣ 메시지 설정 추가
+  * 스프링 부트가 해당 메시지 파일을 인식할 수 있도록 `application.properties`에 `errors` 설정 추가
+    * `spring.messages.basename=messages,errors`
+  ##### 3️⃣ 메시지 파일 적용
+  * 메시지 코드와 argument 매개변수를 배열로 입력
+    * 0번 index가 없다면 1번 index가 출력되는 방식으로 우선순위를 설정할 수 있도록 배열 사용
+    * 메시지 코드를 찾지 못하면, 디폴트 메시지 출력
+  ```java
+      //range.item.price=가격은 {0} ~ {1} 까지 허용합니다.
+          new FieldError("item", "price", item.getPrice(), false, new String[]{"range.item.price"}, new Object[]{1000, 1000000}, null)
+  ```
 
-##### 1️⃣ 메시지 파일 생성 
-* `errors.properties` 생성 
-##### 2️⃣ 메시지 설정 추가
-* 스프링 부트가 해당 메시지 파일을 인식할 수 있도록 `application.properties`에 `errors` 설정 추가
-  * `spring.messages.basename=messages,errors`
-##### 3️⃣ 메시지 파일 적용
-* 메시지 코드와 argument 매개변수를 배열로 입력
-  * 0번 index가 없다면 1번 index가 출력되는 방식으로 우선순위를 설정할 수 있도록 배열 사용
-  * 메시지 코드를 찾지 못하면, 디폴트 메시지 출력
-```java
-    //range.item.price=가격은 {0} ~ {1} 까지 허용합니다.
-        new FieldError("item", "price", item.getPrice(), false, new String[]{"range.item.price"}, new Object[]{1000, 1000000}, null)
-```
+#### 오류 코드 설계
+  ##### 🤔 오류 코드를 디테일하게 만들어야 할까, 단순하게 만들어야 할까?
+  * 오류 코드를 단순하게 만들 경우, 범용성이 좋아 여러 곳에서 사용할 수 있지만 세밀한 메시지 작성 어려움
+  * 오류 코드를 자세하게 만들 경우, 범용성은 떨어지지만 세밀한 메시지 작성 가능
+  
+  ##### 📍 해결 방법 
+  * 오류 코드를 단순하게 작성하여 범용적으로 사용하다가, 기존 메시지보다 세밀한 메시지가 필요할 경우 메시지를 단계적으로 작성
+    * 단계별로 세밀한 정도를 높혀갈 수 있도록 설계
+  * 개발 코드를 별도 수정할 필요 없이 메시지가 담겨 있는 `properties` 파일 수정 만으로도 오류 메시지 관리 가능
+  * 스프링은 `MessageCodesResolver`를 통해 위의 기능 제공
+
+#### `MessageCodesResolver`
 </details>
