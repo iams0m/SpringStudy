@@ -1904,3 +1904,207 @@ item.quantity=수량
     * `Locale.KOREA` : `messages_ko`를 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
     * `Locale.ENGLISH` : `messages_en`을 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
 </details>
+
+<details>
+
+**<summary> `Section 4) 검증1 - Validation` </summary>**
+#### 검증 요구사항
+  ##### 📍 검증 로직 추가
+  * 상품 저장 성공
+    * 사용자가 상품 등록 폼에서 정상 범위 데이터를 입력하면 서버에서는 검증 로직이 통과하고, 상품을 저장하고, 상품 상세 화면으로 redirect
+  * 상품 저장 실패 
+    * 검증에 실패한 경우, 고객에게 다시 상품 등록 폼을 보여주고 어떤 값을 잘못 입력했는지 정보 전달
+  
+  ##### ⚠️ HTTP 요청이 정상인지 검증하는 것은 컨트롤러의 중요한 역할 중 하나
+  ##### 클라이언트 검증과 서버 검증
+  * 클라이언트 검증 : 조작이 가능하기 때문에 보안 취약
+  * 서버 검증 : 즉각적인 고객 사용성 부족 
+    ##### ➡️ 적절히 섞어서 사용하되, 최종적으로 서버 검증 필수
+
+#### V1. 직접 검증 처리하기
+  ##### 📍 Controller
+  * 어떤 검증에서 오류가 발생했는지 `errors`에 결과 보관
+    * `Map<String, String> errors = new HashMap<>();`
+  
+  * 검증 로직
+    * Map을 사용하여 어떤 필드에서 오류가 발생했는지 구분하기 위해 오류가 발생한 필드명을 `key`로, 클라이언트에게 보여줄 메시지를 `value`로 설정
+    ```java
+       if (!StringUtils.hasText(item.getItemName())) {
+           errors.put("itemName", "상품 이름은 필수입니다.");
+       }
+    ```      
+
+  * 검증 실패 로직
+    * 검증에서 오류 메시지가 하나라도 있으면, 오류 메시지 출력을 위해 `model`에 `errors`를 담고 입력 폼이 있는 뷰 템플릿으로 이동 
+    ```java
+       if (!errors.isEmpty()) {
+           model.addAttribute("errors", errors);
+           return "validation/v1/addForm";
+       }
+    ```  
+
+  ##### 📍 Web
+  * 오류 메시지
+    * `th:if` : 조건문을 사용해 `errors`의 `key`가 있다면, 해당 `value`를 렌더링하여 태그 출력
+    ```html
+       <div class="field-error" th:if="${errors?.containsKey('itemName')}" th:text="${errors['itemName']}">
+           상품명 오류
+       </div>
+    ```
+    ##### 🤔 `errors` 뒤의 물음표는 뭘까?
+    * 신규로 등록하는 상황은 `map`을 `model`로 보내지 못했기 때문에 `errors`자체가 null이 됨
+      * `errors.containsKey` : null에 .containsKey을 했다는 의미 ➡️ `NullPointerException` 발생
+    * `errors?.` : `errors`가 null일 때, null 반환 ➡️ 오류 메시지 출력 ❌ 
+
+  * 필드 오류 처리
+    ##### 방법 1️⃣ `th:class`
+    * `class`에 조건식을 사용하여 참일 경우, `form-control`과 `field-error` 호출
+      * 결과 : `class="form-control field-error”`
+    * 조건식을 만족하지 않으면, `form-control` 호출
+      * 결과 : `class="form-control”` 
+    ```html
+       <input type="text" id="itemName" th:field="*{itemName}" th:class="${errors?.containsKey('itemName')} ? 'form-control field-error' : 'form-control'" class="form-control">
+    ```
+
+    ##### 방법 2️⃣ `th:classappend`
+    * `classappaend`에 조건식을 사용하여 참일 경우, 기존 클래스(`form-control`)에 `field-error` 추가
+    * 조건식을 만족하지 않으면, `_`(No-Operation)을 사용해서 기존 클래스(`form-control`)만 호출
+    ```html
+       <input type="text" th:classappend="${errors?.containsKey('itemName')} ? 'field-error' : _" class="form-control">
+    ```
+
+  ##### ✏️ V1의 문제점
+  * 코드의 중복
+    * 하나의 input 로직에 같은 변수를 계속해서 입력해줘야 함
+  * 타입 오류 처리 ❌
+    * 타입이 다른 text를 입력할 경우, 예외 처리가 되지 않고 400 에러 발생
+    * 클라이언트가 작성한 데이터의 보존을 보장할 수 없어 사용자는 어떤 문제로 오류가 발생했는지 이해하기 어려움
+  
+#### V2. BindingResult
+  ##### 📍 Controller
+  * `BindingResult`
+    * 스프링에서 제공하는 validation 라이브러리
+    * 검증 오류 발생시, 검증 오류 보관
+    * `Model`로 넘겨주지 않아도 스프링이 자동 전달
+    ##### ⚠️ `BindingResult` 파라미터의 위치는 항상 바인딩 대상이 되는 객체 바로 뒤에 위치해야 한다.
+
+  * `FieldError`
+    * `FieldError`에서 제공하는 생성자 두 가지
+      ```java
+         // 생성자 1
+         public FieldError(String objectName, String field, String defaultMessage);
+
+         // 생성자 2
+         public FieldError(String objectName, String field, @Nullable Object rejectedValue, boolean bindingFailure, @Nullable String[] codes, @Nullable Object[] arguments, @Nullable String defaultMessage);
+      ```   
+      * **생성자 1️⃣** : 필드 검증 실패시, text box에 클라이언트가 입력한 데이터 삭제
+        * 필드에 오류가 있을 때, `FieldError` 객체를 생성하여 `bindingResult`에 담아둠
+          * `objectName` : `@ModelAttribute` 이름
+          * `field` : 오류 발생 필드 이름
+          * `defaultMessage` : 오류 기본 메시지
+        
+      * **생성자 2️⃣** : 필드 검증 실패시, text box에 클라이언트가 입력한 **데이터 유지**
+        * 필드에 오류가 있을 때, `FieldError` 객체를 생성하여 사용자가 입력한 값을 `rejectedValue`에 담아둠 ➡️ 해당 오류를 `bindingResult`에 담아서 컨트롤러 호출
+          * `rejectedValue` : 사용자가 입력한 값(거절된 값)을 저장하는 필드
+          * `bindingFailure` : type 오류일 경우 `true` / 검증 실패일 경우 `false` 입력
+          * `codes` : 메시지 코드
+          * `arguments` : 메시지 코드에서 사용하는 인자
+
+  * `ObjectError`
+    ```java
+       public ObjectError(String objectName, @Nullable String[] codes, @Nullable Object[] arguments, @Nullable String defaultMessage) {}
+    ```
+      * 특정 필드를 넘어서는 오류가 있을 때, `ObjectError` 객체를 생성하여 `bindingResult`에 담아둠
+
+  #### ✏️ `BindingResult`는 바인딩 대상이 되는 객체 바로 뒤에 위치하기 때문에 이미 본인이 검증해야하는 객체를 알고 있다! (➡️ 따라서 objectName을 넣어주는 과정 생략 가능)
+
+  ##### 📍 `rejectValue()`, `reject()`
+  * `BindingResult`가 제공하는 두 가지 method를 사용하면, Error를 직접 생성하지 않고 깔끔한 검증 오류 가능
+  * Field : `rejectValue()` / Object : `reject()`
+    ```java
+    void rejectValue(@Nullable String field, String errorCode, @Nullable Object[] errorArgs, @Nullable String defaultMessage);
+    ```  
+     * `field` : 오류 발생 필드 이름
+     * `errorCode` : 오류 코드
+     * `errorArgs` : 에러 코드에서 사용하는 인자
+     * `defaultMessage` : 오류 기본 메시지
+  
+  ##### 📍 Web
+  * `타임리프 - 스프링` 검증 오류 통합 기능
+    * `#fields` : `BindingResult`의 타임리프 변수 표현식
+    * `th:errors` : 해당 필드에 오류가 있는 경우 태그 출력 (`th:if`와 유사)
+    * `th:errorclass` : `th:field`에서 지정한 필드에 오류가 있으면, `class` 정보 추가 (class append와 유사)
+  
+  * 글로벌 오류 처리
+    * if문을 사용하여 글로벌 오류가 있다면, 오류 메시지 렌더링 
+    ```html
+       <div th:if="${#fields.hasGlobalErrors()}">
+           <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+       </div>
+    ```
+    
+  * 필드 오류 처리
+    ```html
+       <input type="text" id="itemName" th:field="*{itemName}" th:errorclass="field-error" class="form-control" placeholder="이름을 입력하세요">
+       <div class="field-error" th:errors="*{itemName}">
+           상품명 오류
+       </div>
+    ```
+
+  ##### 📍 `@ModelAttribute`에 바인딩 시, 타입 오류가 발생했다면?
+  * `BindingResult`가 없는 경우 : 400에러가 발생하면서 오류 페이지로 이동하고 컨트롤러 호출 ❌
+  * `BindingResult`가 있는 경우 : 오류 정보를 `BindingResult`에 담고 **컨트롤러 정상 호출**
+
+#### 오류 메시지 일관성 유지
+  ##### 📍 문제점
+  * 지금까지 구현한 로직의 에러 메시지 : 검증 로직마다 그때그때 개발자가 입력 ➡️ 메시지의 일관성 떨어짐 
+    * 🤓 메시지 파일에 에러 메시지를 등록해 일관성 있게 관리해보자 
+  
+  ##### 1️⃣ 메시지 파일 생성 
+  * `errors.properties` 생성 
+  ##### 2️⃣ 메시지 설정 추가
+  * 스프링 부트가 해당 메시지 파일을 인식할 수 있도록 `application.properties`에 `errors` 설정 추가
+    * `spring.messages.basename=messages,errors`
+  ##### 3️⃣ 메시지 파일 적용
+  * 메시지 코드와 argument 매개변수를 배열로 입력
+    * 0번 index가 없다면 1번 index가 출력되는 방식으로 우선순위를 설정할 수 있도록 배열 사용
+    * 메시지 코드를 찾지 못하면, 디폴트 메시지 출력
+  ```java
+      //range.item.price=가격은 {0} ~ {1} 까지 허용합니다.
+          new FieldError("item", "price", item.getPrice(), false, new String[]{"range.item.price"}, new Object[]{1000, 1000000}, null)
+  ```
+
+#### 오류 코드 설계
+  ##### 🤔 오류 코드를 디테일하게 만들어야 할까, 단순하게 만들어야 할까?
+  * 오류 코드를 단순하게 만들 경우, 범용성이 좋아 여러 곳에서 사용할 수 있지만 세밀한 메시지 작성 어려움
+  * 오류 코드를 자세하게 만들 경우, 범용성은 떨어지지만 세밀한 메시지 작성 가능
+  
+  ##### 📍 해결 방법 
+  * 오류 코드를 단순하게 작성하여 범용적으로 사용하다가, 기존 메시지보다 세밀한 메시지가 필요할 경우 메시지를 단계적으로 작성
+    * 단계별로 세밀한 정도를 높혀갈 수 있도록 설계
+  * 개발 코드를 별도 수정할 필요 없이 메시지가 담겨 있는 `properties` 파일 수정 만으로도 오류 메시지 관리 가능
+  * 스프링은 `MessageCodesResolver`를 통해 위의 기능 제공
+
+  ##### 📍 `MessageCodesResolver`
+  * `MessageCodesResolver`에서 메시지 코드 생성 (➡️ rejectValue(), reject() : 내부에서 `MessageCodesResolver` 사용)
+  * 생성된 순서대로 오류 코드 보관
+    ```java
+        MessageCodesResolver codesResolver = new DefaultMessageCodesResolver();
+    ```
+   
+  * 기본 메시지 생성 규칙
+    ##### ✔️ ObjectError
+    ```text
+       1 : code + "." + object name
+       2 : code
+    ```
+
+    ##### ✔️ FieldError
+    ```text
+       1 : code + "." + object name + "." + field
+       2 : code + "." + field
+       3 : code + "." + field type
+       4 : code
+    ```   
+
+</details>
