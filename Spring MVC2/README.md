@@ -743,4 +743,21 @@ item.quantity=수량
        4 : code
     ```   
 
+#### 스프링 기본 오류 코드 변경
+  ##### 📍 검증 오류 코드 분류
+  1. 개발자가 직접 정의한 오류 코드 ➡️ `rejectValue()` 직접 호출
+  2. 스프링이 직접 검증 오류에 추가한 오류 코드 (주로 type 오류)
+
+  ##### 📍 type 오류 메시지 처리
+  * 스프링은 type 오류가 발생하면 typeMismatch 오류 코드 사용
+    ```text
+     codes[typeMismatch.item.price,typeMismatch.price,typeMismatch.java.lang.Integer,typeMismatch]
+    ```
+     * `MessageCodesResolver`의 필드 오류 반환값과 동일한 구조
+  * 오류 코드를 메시지 파일에 추가하면, 스프링이 설정한 기본 메시지가 아닌 원하는 메시지 출력 가능
+  * `errors.properties`
+    ```text
+       typeMismatch.java.lang.Integer=숫자를 입력해주세요.
+       typeMismatch=타입 오류입니다.
+    ```
 </details>
