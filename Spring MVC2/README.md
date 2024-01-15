@@ -717,11 +717,16 @@ item.quantity=수량
   * 스프링은 `MessageCodesResolver`를 통해 위의 기능 제공
 
   ##### 📍 `MessageCodesResolver`
-  * `MessageCodesResolver`에서 메시지 코드 생성 (➡️ rejectValue(), reject() : 내부에서 `MessageCodesResolver` 사용)
-  * 생성된 순서대로 오류 코드 보관
-    ```java
-        MessageCodesResolver codesResolver = new DefaultMessageCodesResolver();
-    ```
+  * 동작 방식
+  ```text
+      1. rejectValue() / reject() 호출 (내부에서 `MessageCodesResolver` 사용)
+      2. MessageCodesResolver에서 검증 오류 코드로 메시지 코드 생성
+      3. new FieldError() 생성하면서 메시지 코드 보관
+      4. th:erros에서 메시지 코드로 메시지를 순서대로 찾고, 노출
+  ```
+  ```java
+     MessageCodesResolver codesResolver = new DefaultMessageCodesResolver();
+  ```
    
   * 기본 메시지 생성 규칙
     ##### ✔️ ObjectError
@@ -738,5 +743,4 @@ item.quantity=수량
        4 : code
     ```   
 
-  
 </details>
