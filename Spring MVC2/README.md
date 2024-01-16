@@ -778,6 +778,7 @@ item.quantity=수량
   * Validator를 상속받아 상황에 맞게 검증 로직 완성
 
   ##### 📍 Controller 리팩토링
+  ##### 1️⃣ 검증기 직접 호출
   * 스프링 빈으로 등록한 검증 담당 클래스 주입 (`ItemValidator`)
   * 별도의 클래스로 분리한 검증 로직 삭제 후, `ItemValidator`의 `validate` 호출
     ```java
@@ -797,4 +798,43 @@ item.quantity=수량
          }
        }
     ```
+
+  ##### 2️⃣ `WebDataBinder` 적용
+  * `@InitBinder`
+    * 해당 컨트롤러로 url이 매핑 되면, 애노테이션이 선언된 메서드 실행
+    * 스프링 내부적으로 생성된 `WebDataBinder`를 매개변수로 받아서 컨트롤러의 매핑 메서드 실행 전, 검증 수행
+    ```java
+       public class ValidationItemControllerV2 {
+
+         private final ItemValidator itemValidator;
+
+       //-- spring param 바인딩 --//
+       @InitBinder
+       public void init(WebDataBinder dataBinder) {
+           dataBinder.addValidators(itemValidator);
+       }
+    ```
+
+  * `@Validated` 적용
+    * 검증 대상 앞에 `@Validated`를 붙여주면, validator를 직접 호출하지 않아도 검증기 자동 실행
+      * `@InitBinder` 메서드에서 `supports()`로 검증할 수 있는 객체를 판별하고, 검증 가능한 로직으로 수행 
+    ```java
+       public class ValidationItemControllerV2 {
+
+         private final ItemValidator itemValidator;
+
+         @PostMapping("/add")
+         public String addItemV6(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+           // 검증 실패 로직
+
+           // 검증 성공 로직
+         }
+       }
+    ```
+</details>
+
+<details>
+
+**<summary> `Section 5) 검증2 - Bean Validation` </summary>**
 </details>
