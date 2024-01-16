@@ -760,4 +760,41 @@ item.quantity=수량
        typeMismatch.java.lang.Integer=숫자를 입력해주세요.
        typeMismatch=타입 오류입니다.
     ```
+
+#### Validator 분리
+  ##### 📍 검증 로직 분리
+  * 컨트롤러에서 검증 로직이 차지하는 부분은 매우 큼 ➡️ 검증만 담당하는 별도의 클래스(`ItemValidator`)를 생성하여 역할 분리
+  * 스프링이 제공하는 검증 인터페이스
+    ```java
+       public interface Validator {
+         boolean supports(Class<?> clazz);
+         void validate(Object target, Errors errors);
+       }
+    ```
+    * `supports()` : 해당 검증기 지원 여부 확인
+    * `validate(Object target, Errors errors)` : 실질적인 검증 로직이 작동되는 메서드
+      * 검증 대상 객체와 `BindingResult`를 변수로 받음 
+        * `Errors` : `BindingResult`의 부모 클래스
+  * Validator를 상속받아 상황에 맞게 검증 로직 완성
+
+  ##### 📍 Controller 리팩토링
+  * 스프링 빈으로 등록한 검증 담당 클래스 주입 (`ItemValidator`)
+  * 별도의 클래스로 분리한 검증 로직 삭제 후, `ItemValidator`의 `validate` 호출
+    ```java
+       public class ValidationItemControllerV2 {
+
+         private final ItemValidator itemValidator;
+
+         @PostMapping("/add")
+         public String addItemV5(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+           // 검증 로직
+           itemValidator.validate(item, bindingResult);
+
+           // 검증 실패 로직
+
+           // 검증 성공 로직
+         }
+       }
+    ```
 </details>
