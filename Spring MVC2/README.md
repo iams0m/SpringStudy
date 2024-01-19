@@ -837,4 +837,19 @@ item.quantity=수량
 <details>
 
 **<summary> `Section 5) 검증2 - Bean Validation` </summary>**
+
+#### Bean Validation 소개
+  ##### Bean Validation 이란?
+  * 검증 로직을 모든 프로젝트에 적용할 수 있도록 공통화하고, 표준화 한 것
+  * 애노테이션 하나로 검증 로직 적용 가능
+
+#### Bean Validation 적용
+  ##### 의존관계 추가
+  ```java
+       implementation 'org.springframework.boot:spring-boot-starter-validation'
+  ```
+ * 추가되는 라이브러리
+   * `jakarta.validation-api` : 특정 구현체에 관계없이 제공되는 인터페이스
+   * `hibernate-validator` : 구현체
+
 </details>
