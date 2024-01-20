@@ -848,8 +848,20 @@ item.quantity=수량
   ```java
        implementation 'org.springframework.boot:spring-boot-starter-validation'
   ```
- * 추가되는 라이브러리
-   * `jakarta.validation-api` : 특정 구현체에 관계없이 제공되는 인터페이스
-   * `hibernate-validator` : 구현체
+  * Spring Boot 
+    * 자동으로 Bean Validator 인지
+    * 애노테이션을 보고 검증을 수행할 수 있는 `LocalValidatorFactoryBean`을 글로벌 Validator로 등록
+    * `@Valid`, `@Validated`를 적용해야 Validator 정상 동작
+    * 검증 오류 발생시 `FieldError`, `ObjectError`를 생성하여 `BindingResult`에 담아줌
+  
+  * 추가되는 라이브러리
+    * `jakarta.validation-api` : 특정 구현체에 관계없이 제공되는 표준 인터페이스
+    * `hibernate-validator` : 구현체
 
+  ##### 검증 순서
+  1. `@ModelAttribute` : 각각의 필드 타입 바인딩
+  2. 바인딩에 성공하면, `BeanValidation` 적용
+  3. 바인딩에 실패하면, `FieldError` 추가 ➡️ `BeanValidation` 적용 ❌
+
+#### Bean Validation 에러 코드
 </details>
