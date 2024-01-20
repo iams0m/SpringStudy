@@ -843,7 +843,7 @@ item.quantity=수량
   * 검증 로직을 모든 프로젝트에 적용할 수 있도록 공통화하고, 표준화 한 것
   * 애노테이션 하나로 검증 로직 적용 가능
 
-#### Bean Validation 적용
+  #### Bean Validation 적용
   ##### 의존관계 추가
   ```java
        implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -859,9 +859,30 @@ item.quantity=수량
     * `hibernate-validator` : 구현체
 
   ##### 검증 순서
-  1. `@ModelAttribute` : 각각의 필드 타입 바인딩
-  2. 바인딩에 성공하면, `BeanValidation` 적용
-  3. 바인딩에 실패하면, `FieldError` 추가 ➡️ `BeanValidation` 적용 ❌
+   ##### 1️⃣ `@ModelAttribute` : 각각의 필드 타입 바인딩
+   ##### 2️⃣ 바인딩에 성공하면, `BeanValidation` 적용
+   ##### 3️⃣ 바인딩에 실패하면, `FieldError` 추가 ➡️ `BeanValidation` 적용 ❌
 
-#### Bean Validation 에러 코드
+  #### Bean Validation 에러 코드
+  ##### 🤔 `Bean Validation`이 기본으로 제공하는 오류 메시지를 변경하고 싶으면 어떻게 해야 할까?
+  * ➡️ `Bean Validation`을 적용하고, `bindingResult`에 등록된 검증 오류 코드를 살펴보면 **오류 코드가 애노테이션 이름으로 등록**되는 것을 알 수 있음
+  * 예시 
+    * `@NotBlank`
+    ```text
+         NotBlank.item.itemName
+         NotBlank.itemName
+         NotBlank.item.java.lang.String
+         NotBlank
+    ```
+  
+  ##### 메시지 등록
+  * `errors.properties`에 메시지를 등록하여 오류 메시지 변경
+    ```text
+         NotBlank={0} 공백X // {0} : 필드명
+    ```
+
+  ##### `Bean Validation` 메시지 우선 순위 
+   ##### 1️⃣순위 - 생성된 메시지 코드 순서대로 `messageSource`에서 메시지 찾기
+   ##### 2️⃣순위 - 메시지 코드를 찾지 못하면, 애노테이션의 `message` 속성 사용
+   ##### 3️⃣순위 - 애노테이션 속성도 찾지 못한 경우, 라이브러리가 제공하는 기본 값 사용
 </details>
