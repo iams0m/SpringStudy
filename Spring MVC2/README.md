@@ -443,6 +443,7 @@ item.price=가격
 item.quantity=수량
 ```
 
+
 #### 국제화
 * 메시지 파일(`message.properties`)을 각 나라별로 별도 관리하여 서비스 국제화
   * 방법 1️⃣ : HTTP accept-language 헤더 값 사용
@@ -450,6 +451,7 @@ item.quantity=수량
 
 #### ⚠️ 기본적인 메시지, 국제화 기능은 Spring이 제공함
   ##### 🌿 타임리프도 스프링이 제공하는 메시지와 국제화 기능을 편리하게 통합하여 제공함
+
 
 #### 스프링 메시지 소스 설정
   ##### 📍 스프링 빈 등록
@@ -476,6 +478,7 @@ item.quantity=수량
   ```
   * 기본값으로 `messages` 라는 파일을 사용하겠다는 의미
   * 클라이언트가 사용하는 특정 언어가 있을 경우, 그 파일로 대체됨
+
 
 #### 스프링 메시지 소스 사용
   ##### 📍 `MessageSource` 인터페이스
@@ -521,6 +524,7 @@ item.quantity=수량
     * `Locale.KOREA` : `messages_ko`를 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
     * `Locale.ENGLISH` : `messages_en`을 찾고, 없으면 시스템의 기본 locale 사용 (`basename`을 `messages`로 가정)
 
+
 #### 웹 애플리케이션에 메시지 및 국제화 적용하기
   ##### 📍 메시지 적용  
   * 타임리프 메시지 표현식 : `#{...}`
@@ -551,6 +555,7 @@ item.quantity=수량
   * 클라이언트 검증 : 조작이 가능하기 때문에 보안 취약
   * 서버 검증 : 즉각적인 고객 사용성 부족 
     ##### ➡️ 적절히 섞어서 사용하되, 최종적으로 서버 검증 필수
+
 
 #### V1. 직접 검증 처리하기
   ##### 📍 Controller
@@ -610,6 +615,7 @@ item.quantity=수량
   * 타입 오류 처리 ❌
     * 타입이 다른 text를 입력할 경우, 예외 처리가 되지 않고 400 에러 발생
     * 클라이언트가 작성한 데이터의 보존을 보장할 수 없어 사용자는 어떤 문제로 오류가 발생했는지 이해하기 어려움
+
   
 #### V2. BindingResult
   ##### 📍 Controller
@@ -686,6 +692,7 @@ item.quantity=수량
   * `BindingResult`가 없는 경우 : 400에러가 발생하면서 오류 페이지로 이동하고 컨트롤러 호출 ❌
   * `BindingResult`가 있는 경우 : 오류 정보를 `BindingResult`에 담고 **컨트롤러 정상 호출**
 
+
 #### 오류 메시지 일관성 유지
   ##### 📍 문제점
   * 지금까지 구현한 로직의 에러 메시지 : 검증 로직마다 그때그때 개발자가 입력 ➡️ 메시지의 일관성 떨어짐 
@@ -704,6 +711,7 @@ item.quantity=수량
       //range.item.price=가격은 {0} ~ {1} 까지 허용합니다.
           new FieldError("item", "price", item.getPrice(), false, new String[]{"range.item.price"}, new Object[]{1000, 1000000}, null)
   ```
+
 
 #### 오류 코드 설계
   ##### 🤔 오류 코드를 디테일하게 만들어야 할까, 단순하게 만들어야 할까?
@@ -743,6 +751,7 @@ item.quantity=수량
        4 : code
     ```   
 
+
 #### 스프링 기본 오류 코드 변경
   ##### 📍 검증 오류 코드 분류
   1. 개발자가 직접 정의한 오류 코드 ➡️ `rejectValue()` 직접 호출
@@ -760,6 +769,7 @@ item.quantity=수량
        typeMismatch.java.lang.Integer=숫자를 입력해주세요.
        typeMismatch=타입 오류입니다.
     ```
+
 
 #### Validator 분리
   ##### 📍 검증 로직 분리
@@ -843,7 +853,8 @@ item.quantity=수량
   * 검증 로직을 모든 프로젝트에 적용할 수 있도록 공통화하고, 표준화 한 것
   * 애노테이션 하나로 검증 로직 적용 가능
 
-  #### Bean Validation 적용
+
+#### Bean Validation 적용
   ##### 의존관계 추가
   ```java
        implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -863,26 +874,30 @@ item.quantity=수량
    ##### 2️⃣ 바인딩에 성공하면, `BeanValidation` 적용
    ##### 3️⃣ 바인딩에 실패하면, `FieldError` 추가 ➡️ `BeanValidation` 적용 ❌
 
-  #### Bean Validation 에러 코드
+
+#### Bean Validation 에러 코드
   ##### 🤔 `Bean Validation`이 기본으로 제공하는 오류 메시지를 변경하고 싶으면 어떻게 해야 할까?
   * ➡️ `Bean Validation`을 적용하고, `bindingResult`에 등록된 검증 오류 코드를 살펴보면 **오류 코드가 애노테이션 이름으로 등록**되는 것을 알 수 있음
   * 예시 
     * `@NotBlank`
     ```text
-         NotBlank.item.itemName
-         NotBlank.itemName
-         NotBlank.item.java.lang.String
-         NotBlank
+       NotBlank.item.itemName
+       NotBlank.itemName
+       NotBlank.item.java.lang.String
+       NotBlank
     ```
-  
+    
   ##### 메시지 등록
   * `errors.properties`에 메시지를 등록하여 오류 메시지 변경
     ```text
-         NotBlank={0} 공백X // {0} : 필드명
+       NotBlank={0} 공백X // {0} : 필드명
     ```
-
+  
   ##### `Bean Validation` 메시지 우선 순위 
    ##### 1️⃣순위 - 생성된 메시지 코드 순서대로 `messageSource`에서 메시지 찾기
    ##### 2️⃣순위 - 메시지 코드를 찾지 못하면, 애노테이션의 `message` 속성 사용
    ##### 3️⃣순위 - 애노테이션 속성도 찾지 못한 경우, 라이브러리가 제공하는 기본 값 사용
+
+
+#### Bean Validation - 오브젝트 오류
 </details>
