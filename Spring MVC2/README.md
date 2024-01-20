@@ -900,4 +900,24 @@ item.quantity=수량
 
 
 #### Bean Validation - 오브젝트 오류
+  ##### 방법1️⃣ `@ScriptAssert()`
+  * 검증 기능이 해당 객체의 범위를 넘어서는 경우 대응 어려움
+  * 제약이 많고 복잡함
+  ```java
+     @Data
+     @ScriptAssert(lang = "javascript", script = "_this.price * _this.quantity >= 10000")
+     public class Item {}
+  ```
+
+  ##### 방법2️⃣ 직접 자바 코드 작성
+  * 오브젝트 오류 관련 부분만 직접 자바 코드로 작성 (권장)
+  ```java
+     if (item.getPrice() != null && item.getQuantity() != null) {
+         int resultPrice = item.getPrice() * item.getQuantity();
+         if (resultPrice < 10000) {
+             bindingResult.reject("totalPriceMin", new Object[]{10000,
+ resultPrice}, null);
+         }
+     }
+  ```
 </details>
