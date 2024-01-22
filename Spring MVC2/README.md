@@ -849,13 +849,13 @@ item.quantity=수량
 **<summary> `Section 5) 검증2 - Bean Validation` </summary>**
 
 #### Bean Validation 소개
-  ##### Bean Validation 이란?
+  ##### 📍 Bean Validation 이란?
   * 검증 로직을 모든 프로젝트에 적용할 수 있도록 공통화하고, 표준화 한 것
   * 애노테이션 하나로 검증 로직 적용 가능
 
 
 #### Bean Validation 적용
-  ##### 의존관계 추가
+  ##### 📍 의존관계 추가
   ```java
        implementation 'org.springframework.boot:spring-boot-starter-validation'
   ```
@@ -869,7 +869,7 @@ item.quantity=수량
     * `jakarta.validation-api` : 특정 구현체에 관계없이 제공되는 표준 인터페이스
     * `hibernate-validator` : 구현체
 
-  ##### 검증 순서
+  ##### 📍 검증 순서
    ##### 1️⃣ `@ModelAttribute` : 각각의 필드 타입 바인딩
    ##### 2️⃣ 바인딩에 성공하면, `BeanValidation` 적용
    ##### 3️⃣ 바인딩에 실패하면, `FieldError` 추가 ➡️ `BeanValidation` 적용 ❌
@@ -887,13 +887,13 @@ item.quantity=수량
        NotBlank
     ```
     
-  ##### 메시지 등록
+  ##### 📍 메시지 등록
   * `errors.properties`에 메시지를 등록하여 오류 메시지 변경
     ```text
        NotBlank={0} 공백X // {0} : 필드명
     ```
   
-  ##### `Bean Validation` 메시지 우선 순위 
+  ##### 📍 `Bean Validation` 메시지 우선 순위 
    ##### 1️⃣순위 - 생성된 메시지 코드 순서대로 `messageSource`에서 메시지 찾기
    ##### 2️⃣순위 - 메시지 코드를 찾지 못하면, 애노테이션의 `message` 속성 사용
    ##### 3️⃣순위 - 애노테이션 속성도 찾지 못한 경우, 라이브러리가 제공하는 기본 값 사용
@@ -924,7 +924,32 @@ item.quantity=수량
 #### 🤔 BeanValidation을 등록 뿐만 아니라 수정에도 적용하고자 한다. 만약 등록과 수정의 요구사항이 다르면 어떻게 처리해야 할까?
   ##### 방법1️⃣ groups 
   * 등록시 검증할 기능과 수정시 검증할 기능을 각각 그룹으로 나누어 적용
-  * `@Validaed`가 제공하는 기능 (`@Valid` 제공 ❌)
+  * 폼 데이터 전달에 Item 도메인 객체 사용
+    * `HTML Form` ➡️ `Item` ➡️ `Controller` ➡️ `Item` ➡️ `Repository`
+    ##### ✔️ 장점 : Item 도메인 객체를 컨트롤러, 리포지토리까지 직접 전달하면서 중간에 Item을 만드는 과정이 없어서 간단함
+    ##### ✔️ 단점 : 간단한 경우에만 적용 가능 (수정시, 검증 중복 위험)
+  * `@Validaed`에서 제공하는 기능 (`@Valid` 제공 ❌)
 
   ##### 방법2️⃣ Form 전송 객체 분리 (권장)
+  * 폼 데이터 전달을 위한 별도의 객체 사용
+    * `HTML Form` ➡️ `ItemSaveForm` ➡️ `Controller` ➡️ `Item 생성` ➡️ `Repository`
+    ##### ✔️ 장점 : 전송하는 폼 데이터가 복잡해도 별도의 폼 객체를 사용하여 데이터를 전달 받을 수 있음 (검증 중복 위험 ❌)
+    ##### ✔️ 단점 : Item 생성 과정 추가
+
+      ##### 📍폼 객체 바인딩
+      ```java
+         @PostMapping("/add")
+         public String addItem(@Validated @ModelAttribute("item") ItemSaveForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {}
+      ```
+       * 기존 : `Item`을 전달 받음 ➡️ 변경 : `ItemSaveForm`을 전달 받음
+      ##### 📍폼 객체 Item으로 변환
+      ```java
+         Item item = new Item();
+         item.setItemName(form.getItemName());
+         item.setPrice(form.getPrice());
+         item.setQuantity(form.getQuantity());
+
+         Item savedItem = itemRepository.save(item);
+      ```
+      * `ItemSaveForm`을 기반으로 Item 객체 생성
 </details>
