@@ -899,7 +899,7 @@ item.quantity=수량
    ##### 3️⃣순위 - 애노테이션 속성도 찾지 못한 경우, 라이브러리가 제공하는 기본 값 사용
 
 
-#### Bean Validation - 오브젝트 오류
+#### Bean Validation 오브젝트 오류
   ##### 방법1️⃣ `@ScriptAssert()`
   * 검증 기능이 해당 객체의 범위를 넘어서는 경우 대응 어려움
   * 제약이 많고 복잡함
@@ -920,6 +920,7 @@ item.quantity=수량
          }
      }
   ```
+
 
 #### 🤔 BeanValidation을 등록 뿐만 아니라 수정에도 적용하고자 한다. 만약 등록과 수정의 요구사항이 다르면 어떻게 처리해야 할까?
   ##### 방법1️⃣ groups 
@@ -952,4 +953,51 @@ item.quantity=수량
          Item savedItem = itemRepository.save(item);
       ```
       * `ItemSaveForm`을 기반으로 Item 객체 생성
+
+
+#### Validation 기능 `HttpMessageConverter`에 적용해보기
+  ##### 📍 `ItemSaveForm`을 JSON API 형식으로 받아보자
+  ```java
+     @Slf4j
+     @RestController
+     @RequestMapping("/validation/api/items")
+     public class ValidationItemApiController {
+
+         @PostMapping("/add")
+         public Object addItem(@RequestBody @Validated ItemSaveForm form, BindingResult bindingResult) {
+
+             log.info("API 컨트롤러 호출");
+
+             if (bindingResult.hasErrors()) {
+                log.info("검증 오류 발생 errors={}", bindingResult);
+                return bindingResult.getAllErrors();
+             }
+
+             log.info("검증 로직 실행");
+             return form;
+         }
+  ```
+  
+  ##### 📍 API 요청 경우 3가지
+  ##### ✔️ 성공 요청
+   ```text
+      API 컨트롤러 호출
+      성공 로직 실행
+   ```
+  
+  ##### ✔️ 실패 요청 : JSON을 객체로 생성하는 것 자체가 실패한 경우
+   * `HttpMessageConverter`에서 요청 JSON을 `ItemSaveForm` 객체로 생성하는데 실패 ➡️ `ItemSaveForm` 객체를 만들지 못하기 때문에 컨트롤러 자체가 호출되지 않고 그 전에 예외 발생 (`Validator`도 실행 ❌)
+  
+  ##### ✔️ 검증 오류 요청 : JSON을 객체로 생성하는 것은 성공했으나, 검증에서 실패한 경우
+   * `return bindingResult.getAllErrors();` : `ObjectError`, `FieldError` 반환
+   * 검증 오류 정상 수행
+
+  ##### 📍 `@ModelAttribute` vs `@RequestBody`
+  ##### ✔️ `@ModelAttribute`
+  * HTTP 요청 파라미터 처리
+  * 필드 단위로 세밀하게 바인딩 적용 ➡️ 특정 필드가 바인딩 되지 않아도 나머지 필드 정상 바인딩 및 검증 가능
+
+  ##### ✔️ `@RequestBody`
+  * 전체 객체 단위로 바인딩 적용
+  * `HttpMessageConverter`가 작동에 성공해서 JSON 데이터를 객체로 변경하지 못하면, 이후 단계 진행없이 예외 발생 (물론 검증도 불가능)
 </details>
