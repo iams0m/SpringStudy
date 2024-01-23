@@ -1001,3 +1001,30 @@ item.quantity=수량
   * 전체 객체 단위로 바인딩 적용
   * `HttpMessageConverter`가 작동에 성공해서 JSON 데이터를 객체로 변경하지 못하면, 이후 단계 진행없이 예외 발생 (물론 검증도 불가능)
 </details>
+
+<details>
+
+**<summary> `Section 6) 로그인 처리1 - 쿠키, 세션` </summary>**
+#### 💻 로그인 요구사항에 맞추어 개발해보자
+  ##### 📦 패키지 구조 설계
+  * `domain`과 `web` 분리
+    * `domain` : 시스템이 구현해야 하는 핵심 비즈니스 업무 영역
+    * 의존관계가 단방향으로 흐르도록 설계
+      * `web`은 `domain`을 의존하지만, `domain`은 `web`을 의존하지 않도록 설계   
+  ```text
+  ├─main
+  │  ├─generated
+  │  ├─java
+  │  │  └─hello
+  │  │      └─login
+  │  │          ├─domain
+  │  │          │  ├─item
+  │  │          │  ├─login
+  │  │          │  └─member
+  │  │          └─web
+  │  │              ├─item
+  │  │              ├─login
+  │  │              └─member
+  ```
+
+</details>
