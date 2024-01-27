@@ -1027,4 +1027,16 @@ item.quantity=수량
   │  │              └─member
   ```
 
+#### 🍪 쿠키 사용하여 로그인, 로그아웃 구현
+  ##### 로그인 상태 유지하기
+  * 쿠키 저장소를 사용하여 회원 정보를 담아두고, 모든 요청에 쿠키 정보 자동 포함
+  * 세션 만료시 로그아웃
+
+  ##### 쿠키 생성 로직
+  ```java
+     Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+     response.addCookie(idCookie);
+  ```
+  * `memberId`라는 이름으로 회원 id값을 쿠키에 저장
+  * HTTP 응답 헤더에 쿠키 정보(회원 id)가 추가됨
 </details>
