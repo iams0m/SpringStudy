@@ -1028,15 +1028,86 @@ item.quantity=수량
   ```
 
 #### 🍪 쿠키 사용하여 로그인, 로그아웃 구현
-  ##### 로그인 상태 유지하기
-  * 쿠키 저장소를 사용하여 회원 정보를 담아두고, 모든 요청에 쿠키 정보 자동 포함
-  * 세션 만료시 로그아웃
-
-  ##### 쿠키 생성 로직
+  ##### ✔️ 로그인
+  * 로그인 상태 유지하기
+    * 쿠키 저장소를 사용하여 회원 정보를 담아두고, 모든 요청에 쿠키 정보 자동 포함
+    * 세션 만료시 로그아웃
+  
+  * 쿠키 생성 로직 (`LoginController`)
   ```java
-     Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
-     response.addCookie(idCookie);
+     @PostMapping("/login")
+     public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            return "login/loginForm";
+        }
+
+        Member loginMember = loginService.login(form.getLoginId(), form.getPassword());
+
+        if (loginMember == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "login/loginForm";
+        }
+
+        // 로그인 성공 처리
+        // 세션 쿠키
+        Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+        response.addCookie(idCookie);
+
+        return "redirect:/";
+    }
   ```
-  * `memberId`라는 이름으로 회원 id값을 쿠키에 저장
-  * HTTP 응답 헤더에 쿠키 정보(회원 id)가 추가됨
+   ##### 1️⃣ 로그인에 성공하면 쿠키를 생성하고 `HttpServletResponse`에 담아둠
+   ##### 2️⃣ `memberId`라는 이름으로 회원 id값을 쿠키에 저장
+   ##### 3️⃣ HTTP 응답 헤더에 쿠키 정보(회원 id)가 추가됨
+
+  * 로그인 처리 (`HomeController`)
+  ```java
+       @GetMapping("/")
+       public String homeLogin(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
+  
+          // 로그인 쿠키가 없는 경우
+          if (memberId == null) {
+              return "home";
+          }
+  
+          // 로그인
+          Member loginMember = memberRepository.findById(memberId);
+  
+          // 실패 로직 - 로그인 쿠키가 있지만, 회원이 없는 경우
+          if (loginMember == null) {
+              return "home";
+          }
+  
+          // 성공 로직 - 로그인 쿠키가 있고, 회원도 있는 경우
+          model.addAttribute("member", loginMember);
+          return "loginHome"; // 사용자 전용 홈 화면으로 이동
+      }
+  ```
+   ##### `@CookieValue` : 쿠키 조회 인터페이스
+   ##### `required = false` : 로그인 하지 않은 사용자도 홈 접근 가능하도록 설정
+
+
+  ##### ✔️ 로그아웃
+  * 세션 쿠키이므로 웹 브라우저 종료시, 서버에서 **해당 쿠키 종료 날짜 0으로 지정**
+  * 쿠키 종료 로직 (`LoginController`)
+  ```java
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        expireCookie(response, "memberId");
+        return "redirect:/";
+    }
+
+    private static void expireCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+  ```
+   ##### `cookie.setMaxAge(0);` : 쿠키가 웹 브라우저 입장에서 0이기 때문에 즉시 종료
+
+
+#### 쿠키와 보안 문제
+  ##### ⚠️ 보안 문제
+  * 쿠키 값 임의 변경 가능
+    * 클라이언트가 쿠키를 강제로 변경하면 사용자가 바뀌게 됨 
 </details>
