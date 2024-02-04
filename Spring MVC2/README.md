@@ -1122,4 +1122,27 @@ item.quantity=수량
   
   * **클라이언트**
     * 쿠키 저장소에 `세션 ID` 쿠키 보관하고, 요청시에는 `세션 ID` 쿠키 전달 
+
+#### HttpSession
+* 서블릿이 공식 지원하는 세션
+* 추정 불가능한 랜덤 값으로 쿠키 생성
+
+  ##### 세션 생성
+  * `request.getSession(true)`
+    * 디폴트 값 
+    * 세션 있으면, 기존 세션 반환
+    * 세션 없으면, 새로운 세션 생성하여 반환
+  * `request.getSession(false)`
+    * 세션 있으면, 기존 세션 반환
+    * 세션 없으면, 새로운 세션 생성하지 않고 null 반환
+  * 세션은 메모리를 사용하므로 꼭 필요할 때만 생성하기
+  
+  ##### 세션에 데이터 보관
+  * `session.setAttribute()`
+
+  ##### 세션 제거
+  * `session.invalidate()`
+
+#### `@SessionAttribute`
+
 </details>
